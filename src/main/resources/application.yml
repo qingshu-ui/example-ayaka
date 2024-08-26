@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: example-ayaka
+
+# ayaka setup
+ayaka:
+  ws:
+    server:
+      enable: false
+      url: "/ws/ayaka"
+    client:
+      enable: true
+      url: "ws://192.168.1.9:5800"
+  task:
+    thread-name-prefix: "ayaka-async-task"
+  plugin:
+    plugin-package: "io.github.qingshu.ayaka.example"
+
+# log setup
+logging:
+  level:
+    root: INFO
+    io.github.qingshu.ayaka.example: DEBUG
+  file:
+    name: logs/run.log
