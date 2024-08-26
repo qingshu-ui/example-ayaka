@@ -2,6 +2,7 @@ package io.github.qingshu.ayaka.example.bean
 
 import io.github.qingshu.ayaka.example.config.PropertiesReader
 import io.github.qingshu.ayaka.example.yolo.YOLO
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
@@ -23,9 +24,10 @@ class YoloV8 {
     @Bean("slideVerification")
     @ConditionalOnMissingBean
     fun onnxWithYoloV8(): YOLO {
-        val classLoader = YoloV8::class.java.classLoader
-        val modelPath = classLoader.getResource(reader.get("slide_verification_model"))?.path?.removePrefix("/")
-        val labelPath = classLoader.getResource(reader.get("slide_verification_names"))?.path?.removePrefix("/")
-        return YOLO(modelPath!!, labelPath!!)
+        return YOLO.newInstance(reader.get("slide_verification_model"), reader.get("slide_verification_names"))
+    }
+
+    companion object {
+        private val log = LoggerFactory.getLogger(YoloV8::class.java)
     }
 }

@@ -14,7 +14,7 @@ ayaka:
       url: "/ws/ayaka"
     client:
       enable: true
-      url: "ws://192.168.1.9:5800"
+      url: "ws://127.0.0.1:5800"
   task:
     thread-name-prefix: "ayaka-async-task"
   plugin:

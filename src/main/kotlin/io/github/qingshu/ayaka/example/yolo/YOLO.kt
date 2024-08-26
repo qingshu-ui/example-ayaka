@@ -2,16 +2,18 @@ package io.github.qingshu.ayaka.example.yolo
 
 import ai.onnxruntime.*
 import io.github.qingshu.ayaka.example.yolo.compatible.AbstractONNX
+import io.github.qingshu.ayaka.example.yolo.extensions.toBufferedReader
+import io.github.qingshu.ayaka.example.yolo.extensions.toByteArray
 import nu.pattern.OpenCV
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.core.Size
 import org.opencv.imgcodecs.Imgcodecs
 import org.slf4j.LoggerFactory
+import java.io.BufferedReader
 import java.io.IOException
 import java.nio.FloatBuffer
-import java.nio.file.Files
-import java.nio.file.Paths
+import java.util.stream.Collectors
 
 /**
  * Copyright (c) 2024 qingshu.
@@ -20,10 +22,7 @@ import java.nio.file.Paths
  * This project is licensed under the GPL-3.0 License.
  * See the LICENSE file for details.
  */
-class YOLO(
-    private val modelPath: String,
-    private val labelPath: String,
-) {
+class YOLO {
     private val parent: AbstractONNX = AbstractONNX()
 
     private lateinit var env: OrtEnvironment
@@ -59,17 +58,15 @@ class YOLO(
 
     init {
         OpenCV.loadLocally()
-        initializeModel()
-        initializeLabel()
     }
 
-    private fun initializeModel() {
+    fun initializeModel(model: ByteArray) {
         env = OrtEnvironment.getEnvironment()
 
         try {
-            session = env.createSession(modelPath, OrtSession.SessionOptions())
+            session = env.createSession(model, OrtSession.SessionOptions())
         } catch (e: OrtException) {
-            log.error("Could not load model from $modelPath, Because of ${e.message}")
+            log.error("Could not load model, Because of ${e.message}")
         }
 
         // 获取模型输入名称
@@ -85,13 +82,11 @@ class YOLO(
         log.info("Model input shape: ${inputSize.width} * ${inputSize.height}")
     }
 
-    private fun initializeLabel() {
+    fun initializeLabel(reader: BufferedReader) {
         try {
-            Files.lines(Paths.get(labelPath)).use { lines ->
-                labelNames = lines.map { it.trim() }.toList()
-            }
+            labelNames = reader.lines().map(String::trim).collect(Collectors.toList())
         } catch (e: IOException) {
-            log.error("Could not load label from $modelPath, because of ${e.message}")
+            log.error("Could not load label, because of ${e.message}")
         }
     }
 
@@ -226,5 +221,35 @@ class YOLO(
 
     companion object {
         private val log = LoggerFactory.getLogger(YOLO::class.java)
+
+        /**
+         * 由于项目在打包后，jar中的资源路径将变得不可访问
+         * 建议通过类加载器访问资源，以 stream 的形式传参
+         */
+        fun newInstance(model: ByteArray, reader: BufferedReader): YOLO {
+            val yolo = YOLO()
+            yolo.initializeModel(model)
+            yolo.initializeLabel(reader)
+            return yolo
+        }
+
+        /**
+         * 不在接收路径为参数，这里的参数是 resources 目录下的资源路径
+         * @param modelPath [String] resources 目录下的路径： resources/model/onnx.onnx -> model/onnx.onnx
+         * @param labelPath [String]
+         */
+        fun newInstance(modelPath: String, labelPath: String): YOLO {
+            val classLoader = Companion::class.java.classLoader
+            val modelStream = classLoader.getResourceAsStream(modelPath)
+            val labelStream = classLoader.getResourceAsStream(labelPath)
+
+            if (modelStream == null || labelStream == null) {
+                log.error("Resource not found: $modelPath or $labelPath")
+                throw IllegalArgumentException("Resource not found: $modelPath or $labelPath")
+            }
+            val modelByteArray = modelStream.use { it.toByteArray() }
+            val labelBufferedReader = labelStream.toBufferedReader()
+            return newInstance(modelByteArray, labelBufferedReader)
+        }
     }
 }

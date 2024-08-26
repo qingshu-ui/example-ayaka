@@ -13,14 +13,14 @@ import kotlin.system.exitProcess
  */
 class YoloTest
 
-fun main(args: Array<String>) {
+fun testMain(args: Array<String>) {
     val reader = PropertiesReader()
     val classLoader = YoloTest::class.java.classLoader
-    val modelPath = classLoader.getResource(reader.get("slide_verification_model"))?.path?.removePrefix("/")
-    val labelPath = classLoader.getResource(reader.get("slide_verification_names"))?.path?.removePrefix("/")
+    val modelPath = reader.get("slide_verification_model")
+    val labelPath = reader.get("slide_verification_names")
 
     val imagePath = "C:\\Users\\17186\\IdeaProjects\\example-ayaka\\logs\\test.jpg"
-    val model = YOLO(modelPath!!, labelPath!!)
+    val model = YOLO.newInstance(modelPath, labelPath)
     val imgMat = Imgcodecs.imread(imagePath)
     if (imgMat.empty()) {
         println("Could not open image $imagePath")
