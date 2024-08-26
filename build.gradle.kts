@@ -41,6 +41,7 @@ dependencies {
     implementation("com.microsoft.onnxruntime:onnxruntime:1.19.0")
 
     // spring
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation ("io.github.qingshu-ui:ayaka-spring-boot-starter:0.0.4-SNAPSHOT")
     implementation ("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-websocket")

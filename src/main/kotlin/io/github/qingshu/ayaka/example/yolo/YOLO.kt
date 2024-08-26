@@ -2,6 +2,7 @@ package io.github.qingshu.ayaka.example.yolo
 
 import ai.onnxruntime.*
 import io.github.qingshu.ayaka.example.yolo.compatible.AbstractONNX
+import nu.pattern.OpenCV
 import org.opencv.core.CvType
 import org.opencv.core.Mat
 import org.opencv.core.Size
@@ -22,7 +23,8 @@ import java.nio.file.Paths
 class YOLO(
     private val modelPath: String,
     private val labelPath: String,
-) : AbstractONNX() {
+) {
+    private val parent: AbstractONNX = AbstractONNX()
 
     private lateinit var env: OrtEnvironment
 
@@ -56,6 +58,7 @@ class YOLO(
 
 
     init {
+        OpenCV.loadLocally()
         initializeModel()
         initializeLabel()
     }
@@ -141,16 +144,16 @@ class YOLO(
         rawSize.height = mat.height().toDouble()
 
         // 图片变换以匹配模型需要的大小
-        val resizedMat = super.scaleByPadding(mat, inputSize)
+        val resizedMat = parent.scaleByPadding(mat, inputSize)
 
         // 归一化
         resizedMat.convertTo(resizedMat, CvType.CV_32FC3, 1.0 / 255)
 
         // 创建输入张量
         val whcArr = FloatArray((inputSize.width * inputSize.height * mat.channels()).toInt())
-        mat.get(0, 0, whcArr)
+        resizedMat.get(0, 0, whcArr)
         // 张量变换：whc to chw
-        val inputBuffer = FloatBuffer.wrap(whc2cwh(whcArr))
+        val inputBuffer = FloatBuffer.wrap(parent.whc2cwh(whcArr))
         val inputTensor = OnnxTensor.createTensor(env, inputBuffer, inputShape)
 
         return mapOf(inputName to inputTensor)
@@ -176,7 +179,7 @@ class YOLO(
      */
     private fun processOutput(predictions: Array<FloatArray>): ArrayList<Detection> {
         // 1. 矩阵转置
-        val transposedMatrix = transposeMatrix(predictions)
+        val transposedMatrix = parent.transposeMatrix(predictions)
         // 2. 创建容器，用来接收符合置信度的结果
         val class2Bbox = hashMapOf<Int, ArrayList<FloatArray>>()
         // 3. 遍历
@@ -184,16 +187,16 @@ class YOLO(
             // 前四个时边界框值，后面是每个标签的概率
             val cond = bbox.copyOfRange(4, bbox.size)
             // 获取概率最高的标签(index)
-            val label = maxIndex(cond)
+            val label = parent.maxIndex(cond)
             // 获取置信度（概率）
             val pConf = cond[label]
             // 如果不符合预期的置信度
             if (pConf < this.conf) continue
             bbox[4] = pConf
             // 映射到原始的坐标
-            rescaleByPadding(bbox, rawSize, inputSize)
+            parent.rescaleByPadding(bbox, rawSize, inputSize)
             // 转换边界框格式
-            xywh2xyxy(bbox)
+            parent.xywh2xyxy(bbox)
             // 简单的判断边界框是否超出图片范围
             if (bbox[0] >= bbox[2] || bbox[1] >= bbox[3]) continue
             // 将符合的结果添加的容器
@@ -205,7 +208,7 @@ class YOLO(
         val detectionList = arrayListOf<Detection>()
         for ((label, bboxList) in class2Bbox) {
             // 非极大值抑制，用于剔除边界框重叠，保留置信度最大的
-            val nmxBoxes = nonMaxSuppression(bboxList, iou)
+            val nmxBoxes = parent.nonMaxSuppression(bboxList, iou)
             for (bbox in nmxBoxes) {
                 // 获取标签名
                 val labelString = labelNames.getOrElse(label) { "Unknown" }

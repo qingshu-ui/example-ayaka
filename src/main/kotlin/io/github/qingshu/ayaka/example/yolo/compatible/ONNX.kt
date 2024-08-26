@@ -67,44 +67,6 @@ interface ONNX {
      * @param iou [Float] 交并比（Intersection over Union, IoU）
      * @return [ArrayList]
      */
-    fun nonMaxSuppression(bboxList: ArrayList<FloatArray>, iou: Float): ArrayList<FloatArray> {
-        val bestBoxes = ArrayList<FloatArray>()
-        bboxList.sortWith(compareBy { it[4] })
-        while (bboxList.isNotEmpty()) {
-            val bestBox = bboxList.removeAt(bboxList.size - 1)
-            bestBoxes.add(bestBox)
-            bboxList.removeAll { computeIou(it, bestBox) >= iou }
-        }
-        return bestBoxes
-    }
+    fun nonMaxSuppression(bboxList: ArrayList<FloatArray>, iou: Float): ArrayList<FloatArray>
 
-    /**
-     * 在目标检测任务中，IoU用来衡量预测边界框与真实边界框之间的重叠程度。
-     * 高的IoU意味着预测框与真实框的重叠部分更大，从而可以更准确地定位对象。
-     */
-    private fun computeIou(box1: FloatArray, box2: FloatArray): Float {
-        // 计算第一个边界框的面积: (x_max - x_min) * (y_max - y_min)
-        val area1 = (box1[2] - box1[0]) * (box1[3] - box1[1])
-        // 计算第二个边界框的面积: (x_max - x_min) * (y_max - y_min)
-        val area2 = (box2[2] - box2[0]) * (box2[3] - box2[1])
-
-        // 计算相交区域的左边界: 取两个边界框左边界中的最大值
-        val left = maxOf(box1[0], box2[0])
-        // 计算相交区域的上边界: 取两个边界框上边界中的最大值
-        val top = maxOf(box1[1], box2[1])
-        // 计算相交区域的右边界: 取两个边界框右边界中的最小值
-        val right = minOf(box1[2], box2[2])
-        // 计算相交区域的下边界: 取两个边界框下边界中的最小值
-        val bottom = minOf(box1[3], box2[3])
-
-        // 计算相交区域的面积: 如果相交区域不存在，面积为0
-        // maxOf(right - left, 0f) 和 maxOf(bottom - top, 0f) 确保面积不为负
-        val interArea = maxOf(right - left, 0f) * maxOf(bottom - top, 0f)
-        // 计算两个边界框的并集面积: area1 + area2 - interArea
-        val unionArea = area1 + area2 - interArea
-
-        // 计算交并比 (IoU): 相交面积除以并集面积
-        // 如果 unionArea 为0，返回一个非常小的数 (1e-8f) 来避免除以零
-        return maxOf(interArea / unionArea, 1e-8f)
-    }
 }

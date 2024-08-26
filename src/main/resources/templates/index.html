@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>对象检测上传</title>
+  <link rel="stylesheet" href="/css/styles.css"/>
+</head>
+<body>
+<div class="container">
+  <h1>对象检测上传</h1>
+  <div class="upload-section">
+    <input type="file" id="file-upload" class="file-input" accept="image/*">
+    <label for="file-upload" class="file-label">选择图片文件</label>
+    <div id="file-name" class="file-name"></div>
+  </div>
+  <div id="results" style="display: none;">
+    <h2>检测结果</h2>
+    <div class="image-container">
+      <img id="uploaded-image" src="" alt="上传的图片" class="detection-image">
+    </div>
+    <div class="detections-list">
+      <h3>检测到的对象：</h3>
+      <div class="detection-item">
+        <span class="detection-label">人</span>
+        <br>
+        <span class="detection-confidence">置信度: 0.95</span>
+        <br>
+        <span>边界框: [60, 80, 180, 160]</span>
+      </div>
+      <div class="detection-item">
+        <span class="detection-label">狗</span>
+        <br>
+        <span class="detection-confidence">置信度: 0.87</span>
+        <br>
+        <span>边界框: [300, 120, 120, 100]</span>
+      </div>
+    </div>
+  </div>
+</div>
+<script src="/js/scripts.js"></script>
+</body>
+</html>
