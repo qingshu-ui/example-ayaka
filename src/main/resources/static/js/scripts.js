@@ -11,7 +11,8 @@ $('#file-upload').on('change', function (e) {
         if (typeof event.target.result === 'string') {
             processImage(event.target.result, file)
         } else {
-            console.log("FileReader result is not a string");
+            console.error("FileReader result is not a string");
+            displayErrorText("FileReader result is not a string")
         }
     }
     reader.readAsDataURL(e.target.files[0])
@@ -51,9 +52,13 @@ $('#file-upload').on('change', function (e) {
             // Draw the image on the canvas
             ctx.drawImage(img, 0, 0);
 
-            // Draw bounding boxes
+            // Get detection container and clean content
+            let detectionsList = $('.detections-list')
+            detectionsList.empty()
 
+            // Get detections from response
             let detections = response['detections']
+
             detections.forEach(detection => {
                 let bbox = detection['bbox']
                 let label = detection['label']
@@ -89,7 +94,8 @@ $('#file-upload').on('change', function (e) {
                 // Draw confidence percentage
                 ctx.fillText(confidenceText, x + labelWidth + 10, y)
 
-                $('.detections-list').append(`<div class="detection-item">
+                // Display detection info in text
+                detectionsList.append(`<div class="detection-item">
                     <span class="detection-label">${label}</span>
                     <br>
                     <span class="detection-confidence">置信度: ${confidence}</span>
@@ -103,20 +109,30 @@ $('#file-upload').on('change', function (e) {
 
             // Set the data URL as the src of the image
             $('#uploaded-image').attr('src', dataUrl)
+            $('#error').hide()
             $('#results').show()
         }
 
     }
 
     function handleError(xhr, status, error) {
-        let errorMessage = xhr["responseJSON"]["error"]
-        // console.log(errorMessage)
-        let errorView = $('#error')
-        errorView.find('.error-msg').html(`
+        let errorMessage = xhr["responseJSON"]["error"] || 'Unknown error';
+        displayErrorText(errorMessage)
+    }
+})
+
+/**
+ * Display error message on the webpage
+ * @param error
+ */
+function displayErrorText(error) {
+    let errorMessage = error || "Unknown error";
+    let errorView = $('#error')
+    errorView.find('.error-msg').html(`
             <div class="error-msg-t">
                <span>错误: ${errorMessage}</span>
             </div> 
         `)
-        errorView.show()
-    }
-})
+    $('#results').hide()
+    errorView.show()
+}
