@@ -50,17 +50,6 @@ h1, h2 {
     height: auto;
     border-radius: 4px;
 }
-.bounding-box {
-    position: absolute;
-    border: 2px solid #e74c3c;
-    background-color: rgba(231, 76, 60, 0.2);
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    color: #fff;
-    font-size: 12px;
-    padding: 2px;
-}
 .detections-list {
     background-color: #ecf0f1;
     border-radius: 4px;
@@ -79,4 +68,12 @@ h1, h2 {
 }
 .detection-confidence {
     color: #7f8c8d;
+}
+.error-msg {
+    background-color: #ecf0f1;
+    border-radius: 4px;
+    padding: 15px;
+}
+.error-msg-t {
+    color: red;
 }

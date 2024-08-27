@@ -22,6 +22,7 @@ configurations {
 
 repositories {
     mavenCentral()
+    /*
     maven {
         url = uri("https://maven.pkg.github.com/qingshu-ui/ayaka-spring-boot-starter")
         credentials {
@@ -29,6 +30,7 @@ repositories {
             password = System.getenv("GITHUB_TOKEN")
         }
     }
+     */
     maven {
         url = uri("https://maven.meteordev.org/releases")
     }

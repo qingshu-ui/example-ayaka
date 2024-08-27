@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>对象检测上传</title>
   <link rel="stylesheet" href="/css/styles.css"/>
+  <script src="/js/3.5.1_jquery.js"></script>
 </head>
 <body>
 <div class="container">
@@ -21,20 +22,11 @@
     </div>
     <div class="detections-list">
       <h3>检测到的对象：</h3>
-      <div class="detection-item">
-        <span class="detection-label">人</span>
-        <br>
-        <span class="detection-confidence">置信度: 0.95</span>
-        <br>
-        <span>边界框: [60, 80, 180, 160]</span>
-      </div>
-      <div class="detection-item">
-        <span class="detection-label">狗</span>
-        <br>
-        <span class="detection-confidence">置信度: 0.87</span>
-        <br>
-        <span>边界框: [300, 120, 120, 100]</span>
-      </div>
+    </div>
+  </div>
+  <div id="error" style="display: none;">
+    <div class="error-msg">
+
     </div>
   </div>
 </div>
