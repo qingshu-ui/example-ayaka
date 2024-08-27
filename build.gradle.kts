@@ -22,7 +22,6 @@ configurations {
 
 repositories {
     mavenCentral()
-    /*
     maven {
         url = uri("https://maven.pkg.github.com/qingshu-ui/ayaka-spring-boot-starter")
         credentials {
@@ -30,7 +29,6 @@ repositories {
             password = System.getenv("GITHUB_TOKEN")
         }
     }
-     */
     maven {
         url = uri("https://maven.meteordev.org/releases")
     }
@@ -44,7 +42,7 @@ dependencies {
 
     // spring
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
-    implementation ("io.github.qingshu-ui:ayaka-spring-boot-starter:0.0.4-SNAPSHOT")
+    implementation ("io.github.qingshu-ui:ayaka-spring-boot-starter:0.0.5-SNAPSHOT")
     implementation ("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
