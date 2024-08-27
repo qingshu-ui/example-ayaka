@@ -5,7 +5,7 @@
 
 ## 简介
 
-**example-ayaka** 主要介绍了如何使用[**ayaka-spring-boot-starter**]([qingshu-ui/ayaka-spring-boot-starter (github.com)](https://github.com/qingshu-ui/ayaka-spring-boot-starter))和在Java环境中快速部署Yolo模型到自己的项目，欢迎贡献和反馈！
+**example-ayaka** 主要介绍了如何使用[ayaka-spring-boot-starter]([qingshu-ui/ayaka-spring-boot-starter (github.com)](https://github.com/qingshu-ui/ayaka-spring-boot-starter))和在Java环境中快速部署Yolo模型到自己的项目，欢迎贡献和反馈！
 
 ## 主要功能
 
