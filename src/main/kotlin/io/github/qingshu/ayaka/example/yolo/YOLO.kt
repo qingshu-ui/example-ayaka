@@ -179,7 +179,7 @@ class YOLO {
         val class2Bbox = hashMapOf<Int, ArrayList<FloatArray>>()
         // 3. 遍历
         for (bbox in transposedMatrix) {
-            // 前四个时边界框值，后面是每个标签的概率
+            // 前四个是边界框值，后面是每个标签的概率
             val cond = bbox.copyOfRange(4, bbox.size)
             // 获取概率最高的标签(index)
             val label = parent.maxIndex(cond)

@@ -83,7 +83,7 @@ class AbstractONNX : ONNX {
     }
 
     /**
-     * 获取数组中最大值的索远
+     * 获取数组中最大值的索引
      * @param arr [FloatArray]
      * @return [Int]
      */
