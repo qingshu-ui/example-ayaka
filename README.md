@@ -31,7 +31,7 @@ cd example-ayaka
 
 ### 模型下载
 
-> https://drive.google.com/drive/folders/16O7cpg8oXEB4W8Rixq-MoSrY9AMhZOsj?usp=drive_link
+> https://drive.google.com/drive/folders/16O7cpg8oXEB4W8Rixq-MoSrY9AMhZOsj?usp=sharing
 
 > 将下载好的模型.onnx和.names文件放入`src/main/resources/model/`目录
 

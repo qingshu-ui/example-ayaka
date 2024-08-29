@@ -43,3 +43,4 @@ src/main/resources/model/*.names
 src/test/resources/model/*.onnx
 src/test/resources/model/*.names
 logs/
+config.yaml
