@@ -1,7 +1,6 @@
 # example-ayaka
 
-[![Build Status](https://img.shields.io/github/workflow/status/qingshu-ui/example-ayaka/CI)](https://github.com/yourusername/your-repo/actions)
-[![License](https://img.shields.io/github/license/qingshu-ui/example-ayaka)](https://github.com/yourusername/your-repo/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/qingshu-ui/example-ayaka)](https://github.com/qingshu-ui/example-ayak/blob/master/LICENSE)
 
 ## 简介
 
