@@ -48,6 +48,9 @@ h1, h2 {
     max-width: 100%;
     margin-bottom: 20px;
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .detection-image {
     max-width: 100%;
@@ -81,7 +84,6 @@ h1, h2 {
 .error-msg-t {
     color: red;
 }
-
 .modal {
     display: none;
     position: fixed;
@@ -93,15 +95,16 @@ h1, h2 {
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.9);
 }
-
 .modal-content {
-    margin: auto;
     display: block;
     width: 80%;
     max-width: 700px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     cursor: pointer;
 }
-
 .close {
     position: absolute;
     top: 15px;
@@ -111,7 +114,6 @@ h1, h2 {
     font-weight: bold;
     transition: 0.3s;
 }
-
 .close:hover,
 .close:focus {
     color: #bbb;
