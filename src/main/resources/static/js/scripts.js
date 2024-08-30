@@ -36,7 +36,7 @@ $('#file-upload').on('change', function (e) {
 
 
     function handelResponse(response, imgSrc) {
-        console.log(response)
+        // console.log(response)
 
         let img = new Image()
         img.src = imgSrc
@@ -135,4 +135,29 @@ function displayErrorText(error) {
         `)
     $('#results').hide()
     errorView.show()
+}
+
+let modal = $('#imageModal')
+let img = $('#uploaded-image')
+let modalImage = $('#modalImage')
+
+img.on('click', function (e) {
+    modal.show()
+    modalImage.attr('src', this.src)
+    $('body').addClass('modal-open')
+})
+
+window.onclick = function (e) {
+    if ($(e.target).is(modal)) {
+        closeModal()
+    }
+}
+
+modalImage.on('dblclick', function (e) {
+    closeModal()
+})
+
+function closeModal() {
+    modal.hide()
+    $('body').removeClass('modal-open')
 }

@@ -15,6 +15,8 @@
     <label for="file-upload" class="file-label">选择图片文件</label>
     <div id="file-name" class="file-name"></div>
   </div>
+
+  <!-- 显示检测结果 -->
   <div id="results" style="display: none;">
     <h2>检测结果</h2>
     <div class="image-container">
@@ -24,12 +26,20 @@
       <h3>检测到的对象：</h3>
     </div>
   </div>
-  <div id="error" style="display: none;">
-    <div class="error-msg">
 
-    </div>
+  <!-- 显示错误消息 -->
+  <div id="error" style="display: none;">
+    <div class="error-msg"></div>
   </div>
+
 </div>
+
+<!-- 点击图片时放大预览 -->
+<div id="imageModal" class="modal">
+  <span class="close" onclick="closeModal()">&times;</span>
+  <img class="modal-content" id="modalImage">
+</div>
+
 <script src="/js/scripts.js"></script>
 </body>
 </html>
