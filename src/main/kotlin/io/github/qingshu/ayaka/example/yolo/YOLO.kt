@@ -97,6 +97,7 @@ class YOLO {
      * @param iou [Float] 交并比，用来处理边界框重叠的参数
      * @return result [ArrayList]
      */
+    @Synchronized
     fun detectObject(mat: Mat, conf: Float = 0.25f, iou: Float = 0.5f): ArrayList<Detection> {
         this.conf = conf
         this.iou = iou
@@ -120,6 +121,7 @@ class YOLO {
      * @param iou [Float] 交并比，用来处理边界框重叠的参数
      * @return result [ArrayList]
      */
+    @Synchronized
     fun detectObject(imagePath: String, conf: Float = 0.25f, iou: Float = 0.5f): ArrayList<Detection> {
         val imgMat = Imgcodecs.imread(imagePath)
         if (imgMat.empty()) {

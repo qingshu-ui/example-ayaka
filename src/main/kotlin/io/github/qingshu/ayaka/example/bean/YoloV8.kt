@@ -21,10 +21,14 @@ class YoloV8 {
     @Autowired
     private lateinit var reader: PropertiesReader
 
-    @Bean("slideVerification")
-    @ConditionalOnMissingBean
-    fun onnxWithYoloV8(): YOLO {
-        return YOLO.newInstance(reader.get("slide_verification_model"), reader.get("slide_verification_names"))
+    @Bean("sliderYoloV8n")
+    fun onnxWithYoloV8n(): YOLO {
+        return YOLO.newInstance(reader.get("slider_yolo_v8n_model"), reader.get("slider_yolo_v8n_names"))
+    }
+
+    @Bean("sliderYoloV8s")
+    fun onnxWithYoloV8s(): YOLO {
+        return YOLO.newInstance(reader.get("slider_yolo_v8s_model"), reader.get("slider_yolo_v8s_names"))
     }
 
     companion object {

@@ -20,7 +20,7 @@ import org.springframework.web.multipart.MultipartFile
 @RestController
 @RequestMapping("/api/yolo")
 class SlideVerificationController(
-    @Qualifier("slideVerification") private val yoloModel: YOLO, private val imageProcess: ImageProcessingService
+    @Qualifier("sliderYoloV8n") private val yoloModel: YOLO, private val imageProcess: ImageProcessingService
 ) {
 
     @PostMapping("/recognize")
