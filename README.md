@@ -1,6 +1,6 @@
 # example-ayaka
 
-[![License](https://img.shields.io/github/license/qingshu-ui/example-ayaka)](https://github.com/qingshu-ui/example-ayak/blob/master/LICENSE)
+[![License](https://img.shields.io/github/license/qingshu-ui/example-ayaka)](https://github.com/qingshu-ui/example-ayaka/blob/master/LICENSE)
 
 ## 简介
 
