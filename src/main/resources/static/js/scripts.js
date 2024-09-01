@@ -25,7 +25,7 @@ function processImage(imgSrc, file) {
 
     // Send the image file to the server
     $.ajax({
-        url: '/api/yolo/recognize',
+        url: '/api/yolo/slider-v8s',
         type: 'POST',
         data: formData,
         processData: false,

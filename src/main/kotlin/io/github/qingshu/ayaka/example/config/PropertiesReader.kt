@@ -18,9 +18,9 @@ class PropertiesReader {
 
     init {
         try {
-            properties.load(javaClass.getResourceAsStream("/model.properties"))
+            properties.load(javaClass.getResourceAsStream("/slider-model.properties"))
         } catch (e: IOException) {
-            log.error("Could not load model.properties, because ${e.message}")
+            log.error("Could not load slider-model.properties, because ${e.message}")
         }
     }
 
