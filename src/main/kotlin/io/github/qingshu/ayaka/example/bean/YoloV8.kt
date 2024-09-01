@@ -21,35 +21,35 @@ class YoloV8 {
     @Autowired
     private lateinit var reader: ModelProperties
 
-    @Bean
-    @Lazy
-    fun sliderYoloV8n(): YOLO {
-        return YOLO.newInstance(reader.get("slider-v8n-model"), reader.get("slider-label"))
+    private val modelCache = mutableMapOf<String, YOLO>()
+
+    private fun getYoloModel(modelName: String): YOLO {
+        return modelCache.getOrPut(modelName) {
+            val modelPath = reader.get("$modelName-model")
+            val labelPath = reader.get("slider-label")
+            YOLO.newInstance(modelPath, labelPath)
+        }
     }
 
     @Bean
     @Lazy
-    fun sliderYoloV8s(): YOLO {
-        return YOLO.newInstance(reader.get("slider-v8s-model"), reader.get("slider-label"))
-    }
+    fun sliderYoloV8n(): YOLO = getYoloModel("slider-v8n")
 
     @Bean
     @Lazy
-    fun sliderYoloV8m(): YOLO {
-        return YOLO.newInstance(reader.get("slider-v8m-model"), reader.get("slider-label"))
-    }
+    fun sliderYoloV8s(): YOLO = getYoloModel("slider-v8s")
 
     @Bean
     @Lazy
-    fun sliderYoloV8l(): YOLO {
-        return YOLO.newInstance(reader.get("slider-v8l-model"), reader.get("slider-label"))
-    }
+    fun sliderYoloV8m(): YOLO = getYoloModel("slider-v8m")
 
     @Bean
     @Lazy
-    fun sliderYoloV8x(): YOLO {
-        return YOLO.newInstance(reader.get("slider-v8x-model"), reader.get("slider-label"))
-    }
+    fun sliderYoloV8l(): YOLO = getYoloModel("slider-v8l")
+
+    @Bean
+    @Lazy
+    fun sliderYoloV8x(): YOLO = getYoloModel("slider-v8x")
 
     companion object {
         private val log = LoggerFactory.getLogger(YoloV8::class.java)
