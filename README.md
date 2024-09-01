@@ -32,6 +32,6 @@ cd example-ayaka
 
 > https://drive.google.com/drive/folders/16O7cpg8oXEB4W8Rixq-MoSrY9AMhZOsj?usp=sharing
 
-> 将下载好的模型.onnx和.names文件放入`src/main/resources/model/`目录
+> 将下载好的模型.onnx和.names文件放入`slider-model.yaml`配置文件中指定的目录
 
 > 编译，启动原神
