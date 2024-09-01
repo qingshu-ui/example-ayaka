@@ -13,6 +13,7 @@ import kotlin.system.exitProcess
  */
 class YoloTest
 
+// test only
 fun testMain(args: Array<String>) {
     val reader = ModelProperties()
     val classLoader = YoloTest::class.java.classLoader

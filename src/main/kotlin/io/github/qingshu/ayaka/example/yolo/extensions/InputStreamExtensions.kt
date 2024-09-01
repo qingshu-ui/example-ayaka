@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream
 import java.io.InputStream
 import java.io.InputStreamReader
 
+// unused
 fun InputStream.toByteArray(): ByteArray {
     ByteArrayOutputStream().use { bos ->
         val buffer = ByteArray(1024)
@@ -16,6 +17,7 @@ fun InputStream.toByteArray(): ByteArray {
     }
 }
 
+// unused
 fun InputStream.toBufferedReader(): BufferedReader {
     return BufferedReader(InputStreamReader(this))
 }

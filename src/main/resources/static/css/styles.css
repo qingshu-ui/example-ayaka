@@ -120,3 +120,24 @@ h1, h2 {
     text-decoration: none;
     cursor: pointer;
 }
+.model-selection {
+    margin-bottom: 20px;
+    text-align: center;
+}
+.model-select {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+}
+.model-select:hover {
+    border-color: #888;
+}
+.model-select:focus {
+    outline: none;
+    border-color: #3498db;
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+}

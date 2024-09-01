@@ -10,6 +10,7 @@ import java.io.IOException
 import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import java.util.*
+import kotlin.system.exitProcess
 
 /**
  * Copyright (c) 2024 qingshu.
@@ -21,19 +22,24 @@ import java.util.*
 @Component
 class ModelProperties {
     private var properties = Properties()
-    private val configPath = "./model"
+    private val configPath = "."
     private val configName = "slider-model.yaml"
 
     init {
         val configFilePath = "$configPath/$configName"
         val configFile = File(configFilePath)
         if (!configFile.exists()) {
+            if (!configFile.parentFile.exists()) {
+                configFile.parentFile.mkdirs()
+            }
             try {
                 val defaultConfig = ClassPathResource("slider-model.yaml")
                 Files.copy(
                     defaultConfig.inputStream, configFile.toPath(), StandardCopyOption.REPLACE_EXISTING
                 )
                 log.warn("Configuration file not found. A default configuration the has been copied to $configFilePath")
+                log.info("Please modify the configuration file and run it again")
+                exitProcess(0)
             } catch (e: IOException) {
                 log.error("Unable to create default config. ${e.message}")
             }

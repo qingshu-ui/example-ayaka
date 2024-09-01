@@ -23,9 +23,12 @@ function processImage(imgSrc, file) {
     let formData = new FormData()
     formData.append('image', file)
 
+    // Get the selected model
+    let selectedModel = $('#model-select').val()
+
     // Send the image file to the server
     $.ajax({
-        url: '/api/yolo/slider-v8s',
+        url: `/api/yolo/${selectedModel}`,
         type: 'POST',
         data: formData,
         processData: false,
