@@ -1,6 +1,6 @@
 package io.github.qingshu.ayaka.example.bean
 
-import io.github.qingshu.ayaka.example.config.PropertiesReader
+import io.github.qingshu.ayaka.example.config.ModelProperties
 import io.github.qingshu.ayaka.example.yolo.YOLO
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Lazy
 class YoloV8 {
 
     @Autowired
-    private lateinit var reader: PropertiesReader
+    private lateinit var reader: ModelProperties
 
     @Bean
     @Lazy

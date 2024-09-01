@@ -13,8 +13,10 @@ import java.util.*
  * See the LICENSE file for details.
  */
 @Component
-class PropertiesReader {
+class ModelProperties {
     private val properties = Properties()
+    private val configPath = "./model"
+    private val configName = "slider-model.properties"
 
     init {
         try {
@@ -29,6 +31,6 @@ class PropertiesReader {
     }
 
     companion object {
-        private val log = LoggerFactory.getLogger(PropertiesReader::class.java)
+        private val log = LoggerFactory.getLogger(ModelProperties::class.java)
     }
 }

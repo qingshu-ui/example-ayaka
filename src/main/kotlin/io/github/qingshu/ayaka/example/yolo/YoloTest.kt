@@ -1,6 +1,6 @@
 package io.github.qingshu.ayaka.example.yolo
 
-import io.github.qingshu.ayaka.example.config.PropertiesReader
+import io.github.qingshu.ayaka.example.config.ModelProperties
 import org.opencv.imgcodecs.Imgcodecs
 import kotlin.system.exitProcess
 
@@ -14,7 +14,7 @@ import kotlin.system.exitProcess
 class YoloTest
 
 fun testMain(args: Array<String>) {
-    val reader = PropertiesReader()
+    val reader = ModelProperties()
     val classLoader = YoloTest::class.java.classLoader
     val modelPath = reader.get("slide_verification_model")
     val labelPath = reader.get("slide_verification_names")
