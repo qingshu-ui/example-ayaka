@@ -1,8 +1,14 @@
 package io.github.qingshu.ayaka.example.config
 
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.config.YamlPropertiesFactoryBean
+import org.springframework.core.io.ClassPathResource
+import org.springframework.core.io.FileSystemResource
 import org.springframework.stereotype.Component
+import java.io.File
 import java.io.IOException
+import java.nio.file.Files
+import java.nio.file.StandardCopyOption
 import java.util.*
 
 /**
@@ -14,20 +20,31 @@ import java.util.*
  */
 @Component
 class ModelProperties {
-    private val properties = Properties()
+    private var properties = Properties()
     private val configPath = "./model"
-    private val configName = "slider-model.properties"
+    private val configName = "slider-model.yaml"
 
     init {
-        try {
-            properties.load(javaClass.getResourceAsStream("/slider-model.properties"))
-        } catch (e: IOException) {
-            log.error("Could not load slider-model.properties, because ${e.message}")
+        val configFilePath = "$configPath/$configName"
+        val configFile = File(configFilePath)
+        if (!configFile.exists()) {
+            try {
+                val defaultConfig = ClassPathResource("slider-model.yaml")
+                Files.copy(
+                    defaultConfig.inputStream, configFile.toPath(), StandardCopyOption.REPLACE_EXISTING
+                )
+                log.warn("Configuration file not found. A default configuration the has been copied to $configFilePath")
+            } catch (e: IOException) {
+                log.error("Unable to create default config. ${e.message}")
+            }
         }
+        val yamlFactory = YamlPropertiesFactoryBean()
+        yamlFactory.setResources(FileSystemResource(configFilePath))
+        properties = yamlFactory.`object` ?: Properties()
     }
 
     fun get(key: String): String {
-        return properties.getProperty(key)
+        return properties.getProperty(key) ?: ""
     }
 
     companion object {

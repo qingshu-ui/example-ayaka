@@ -2,8 +2,6 @@ package io.github.qingshu.ayaka.example.yolo
 
 import ai.onnxruntime.*
 import io.github.qingshu.ayaka.example.yolo.compatible.AbstractONNX
-import io.github.qingshu.ayaka.example.yolo.extensions.toBufferedReader
-import io.github.qingshu.ayaka.example.yolo.extensions.toByteArray
 import nu.pattern.OpenCV
 import org.opencv.core.CvType
 import org.opencv.core.Mat
@@ -11,8 +9,10 @@ import org.opencv.core.Size
 import org.opencv.imgcodecs.Imgcodecs
 import org.slf4j.LoggerFactory
 import java.io.BufferedReader
+import java.io.File
 import java.io.IOException
 import java.nio.FloatBuffer
+import java.nio.file.Files
 import java.util.stream.Collectors
 
 /**
@@ -224,11 +224,8 @@ class YOLO {
     companion object {
         private val log = LoggerFactory.getLogger(YOLO::class.java)
 
-        /**
-         * 由于项目在打包后，jar中的资源路径将变得不可访问
-         * 建议通过类加载器访问资源，以 stream 的形式传参
-         */
-        fun newInstance(model: ByteArray, reader: BufferedReader): YOLO {
+
+        private fun newInstance(model: ByteArray, reader: BufferedReader): YOLO {
             val yolo = YOLO()
             yolo.initializeModel(model)
             yolo.initializeLabel(reader)
@@ -236,21 +233,20 @@ class YOLO {
         }
 
         /**
-         * 不在接收路径为参数，这里的参数是 resources 目录下的资源路径
-         * @param modelPath [String] resources 目录下的路径： resources/model/onnx.onnx -> model/onnx.onnx
+         * 从系统路径中加载模型
+         * @param modelPath [String]
          * @param labelPath [String]
          */
         fun newInstance(modelPath: String, labelPath: String): YOLO {
-            val classLoader = Companion::class.java.classLoader
-            val modelStream = classLoader.getResourceAsStream(modelPath)
-            val labelStream = classLoader.getResourceAsStream(labelPath)
-
-            if (modelStream == null || labelStream == null) {
-                log.error("Resource not found: $modelPath or $labelPath")
-                throw IllegalArgumentException("Resource not found: $modelPath or $labelPath")
+            val modelFile = File(modelPath)
+            val labelFile = File(labelPath)
+            if (!labelFile.exists() && !modelFile.exists()) {
+                log.error("$modelPath or $labelPath does not exist")
+                throw IllegalArgumentException("$modelPath or $labelPath does not exist")
             }
-            val modelByteArray = modelStream.use { it.toByteArray() }
-            val labelBufferedReader = labelStream.toBufferedReader()
+
+            val modelByteArray = Files.readAllBytes(modelFile.toPath())
+            val labelBufferedReader = Files.newBufferedReader(labelFile.toPath())
             return newInstance(modelByteArray, labelBufferedReader)
         }
     }
