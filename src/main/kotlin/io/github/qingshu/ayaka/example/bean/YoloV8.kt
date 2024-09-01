@@ -4,9 +4,9 @@ import io.github.qingshu.ayaka.example.config.ModelProperties
 import io.github.qingshu.ayaka.example.yolo.YOLO
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Lazy
 
 /**
  * Copyright (c) 2024 qingshu.
@@ -32,23 +32,33 @@ class YoloV8 {
     }
 
     @Bean
-    @Lazy
+    @ConditionalOnProperty(
+        prefix = "ayaka.slider", name = ["enable"], havingValue = "true", matchIfMissing = true
+    )
     fun sliderYoloV8n(): YOLO = getYoloModel("slider-v8n")
 
     @Bean
-    @Lazy
+    @ConditionalOnProperty(
+        prefix = "ayaka.slider", name = ["enable"], havingValue = "true", matchIfMissing = true
+    )
     fun sliderYoloV8s(): YOLO = getYoloModel("slider-v8s")
 
     @Bean
-    @Lazy
+    @ConditionalOnProperty(
+        prefix = "ayaka.slider", name = ["enable"], havingValue = "true", matchIfMissing = true
+    )
     fun sliderYoloV8m(): YOLO = getYoloModel("slider-v8m")
 
     @Bean
-    @Lazy
+    @ConditionalOnProperty(
+        prefix = "ayaka.slider", name = ["enable"], havingValue = "true", matchIfMissing = true
+    )
     fun sliderYoloV8l(): YOLO = getYoloModel("slider-v8l")
 
     @Bean
-    @Lazy
+    @ConditionalOnProperty(
+        prefix = "ayaka.slider", name = ["enable"], havingValue = "true", matchIfMissing = true
+    )
     fun sliderYoloV8x(): YOLO = getYoloModel("slider-v8x")
 
     companion object {

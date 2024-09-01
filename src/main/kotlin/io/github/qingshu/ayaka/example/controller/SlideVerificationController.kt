@@ -3,6 +3,7 @@ package io.github.qingshu.ayaka.example.controller
 import io.github.qingshu.ayaka.example.service.ImageProcessingService
 import io.github.qingshu.ayaka.example.yolo.YOLO
 import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile
  */
 @RestController
 @RequestMapping("/api/yolo")
+@ConditionalOnProperty(prefix = "ayaka.slider", name = ["enable"], havingValue = "true", matchIfMissing = true)
 class SlideVerificationController(
     @Qualifier("sliderYoloV8n") private val modelV8n: YOLO,
     @Qualifier("sliderYoloV8s") private val modelV8s: YOLO,

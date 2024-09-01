@@ -5,6 +5,14 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 5MB
+  ai:
+    openai:
+      chat:
+        enabled: true
+        api-key: ${spring.ai.openai.api-key}
+        base-url: https://dashscope.aliyuncs.com/compatible-mode
+        options:
+          model: qwen-long
 
 # ayaka setup
 ayaka:
@@ -19,6 +27,8 @@ ayaka:
     thread-name-prefix: "ayaka-async-task"
   plugin:
     plugin-package: "io.github.qingshu.ayaka.example"
+  slider:
+    enable: false
 
 # log setup
 logging:

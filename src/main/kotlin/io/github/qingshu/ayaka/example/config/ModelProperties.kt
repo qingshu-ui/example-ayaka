@@ -2,6 +2,7 @@ package io.github.qingshu.ayaka.example.config
 
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean
+import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.FileSystemResource
 import org.springframework.stereotype.Component
@@ -20,10 +21,12 @@ import kotlin.system.exitProcess
  * See the LICENSE file for details.
  */
 @Component
+@ConfigurationProperties(prefix = "ayaka.slider")
 class ModelProperties {
     private var properties = Properties()
     private val configPath = "."
     private val configName = "slider-model.yaml"
+    var enable = true
 
     init {
         val configFilePath = "$configPath/$configName"
