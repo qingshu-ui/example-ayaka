@@ -26,6 +26,10 @@ class ModelProperties {
     private var properties = Properties()
     private val configPath = "."
     private val configName = "slider-model.yaml"
+
+    /**
+     * 是否启用 滑块验证码识别模型
+     */
     var enable = true
 
     init {
