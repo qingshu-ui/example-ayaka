@@ -3,7 +3,6 @@ package io.github.qingshu.ayaka.example.plugin
 import io.github.qingshu.ayaka.bot.BotContainer
 import io.github.qingshu.ayaka.dto.event.message.PrivateMessageEvent
 import io.github.qingshu.ayaka.plugin.BotPlugin
-import io.github.qingshu.ayaka.plugin.MyPlugin
 import meteordevelopment.orbit.EventHandler
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Component
  * See the LICENSE file for details.
  */
 @Component("secondMyPlugin")
-class MyPlugin : BotPlugin {
+class SchedulePlugin : BotPlugin {
 
     @Autowired
     lateinit var botContainer: BotContainer
@@ -62,6 +61,6 @@ class MyPlugin : BotPlugin {
 
 
     companion object {
-        private val log = LoggerFactory.getLogger(MyPlugin::class.java)
+        private val log = LoggerFactory.getLogger(SchedulePlugin::class.java)
     }
 }

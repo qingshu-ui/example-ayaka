@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component
  * See the LICENSE file for details.
  */
 @Component
-class MyAiChatPlugin @Autowired constructor(
+class QwenAiChatPlugin @Autowired constructor(
     private val qwenService: QwenService
 ) : BotPlugin {
 
@@ -40,17 +40,18 @@ class MyAiChatPlugin @Autowired constructor(
         val userId = event.userId
         val groupId = event.groupId
         if (null != msg && null != bot && null != userId && null != groupId) {
-            val atPattern = "\\[CQ:at,qq=${bot.selfId}]".toRegex()
-            if (atPattern.containsMatchIn(msg)) {
+            val atPattern = "\\[CQ:at,qq=${bot.selfId}(,[^]]*)?\\]".toRegex()
+            if (null != atPattern.find(msg)) {
                 val extractedMessage = msg.replace(atPattern, "").trim()
                 if (extractedMessage.isEmpty()) return
                 val respMsg = qwenService.chat(userId, extractedMessage)
-                bot.sendGroupMsg(groupId, "[CQ:at,qq=$userId] $respMsg", false)
+                val resp = bot.sendGroupMsg(groupId, "[CQ:at,qq=$userId] $respMsg", false)
+                log.info("$resp")
             }
         }
     }
 
     companion object {
-        private val log = LoggerFactory.getLogger(MyAiChatPlugin::class.java)
+        private val log = LoggerFactory.getLogger(QwenAiChatPlugin::class.java)
     }
 }

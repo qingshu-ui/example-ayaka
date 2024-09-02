@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component
  * See the LICENSE file for details.
  */
 @Component
-class FriendRequestHandle : BotPlugin {
+class RequestHandlePlugin : BotPlugin {
 
     @EventHandler
     fun onFriendRequest(event: FriendAddRequestEvent) {
@@ -59,6 +59,6 @@ class FriendRequestHandle : BotPlugin {
     }
 
     companion object {
-        private val log = LoggerFactory.getLogger(FriendRequestHandle::class.java)
+        private val log = LoggerFactory.getLogger(RequestHandlePlugin::class.java)
     }
 }
