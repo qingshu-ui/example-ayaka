@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "1.9.24"
     kotlin("plugin.spring") version "1.9.24"
+    kotlin("kapt") version "1.9.24"
     id("org.springframework.boot") version "3.3.2"
     id("io.spring.dependency-management") version "1.1.6"
 }
@@ -41,7 +42,7 @@ dependencies {
     implementation("com.microsoft.onnxruntime:onnxruntime:1.19.0")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation ("io.github.qingshu-ui:ayaka-spring-boot-starter:0.0.5-SNAPSHOT")
+    implementation ("io.github.qingshu-ui:ayaka-spring-boot-starter:0.0.6-SNAPSHOT")
 
     // spring
     implementation("org.springframework.boot:spring-boot-starter-web")
@@ -49,7 +50,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter")
-    annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    kapt("org.springframework.boot:spring-boot-configuration-processor")
 }
 dependencyManagement {
     imports {
