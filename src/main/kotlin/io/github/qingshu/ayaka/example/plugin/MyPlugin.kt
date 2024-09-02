@@ -54,7 +54,7 @@ class MyPlugin : BotPlugin {
             val bot = it.value
             groupList.forEach {
                 val rel = bot.sendGroupSign(it)
-                val result = bot.sendPrivateMsg(userId, "$it group sign: ${rel.status}", false)
+                bot.sendPrivateMsg(userId, "$it group sign: ${rel.status}", false)
                 log.info("Daily sign: {}", rel)
             }
         }
