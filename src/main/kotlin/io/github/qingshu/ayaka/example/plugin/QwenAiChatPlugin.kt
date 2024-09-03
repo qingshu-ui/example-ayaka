@@ -3,10 +3,17 @@ package io.github.qingshu.ayaka.example.plugin
 import io.github.qingshu.ayaka.dto.event.message.GroupMessageEvent
 import io.github.qingshu.ayaka.dto.event.message.PrivateMessageEvent
 import io.github.qingshu.ayaka.example.service.QwenService
+import io.github.qingshu.ayaka.example.service.impl.Request
+import io.github.qingshu.ayaka.example.service.impl.ScheduleTaskServiceImpl
 import io.github.qingshu.ayaka.plugin.BotPlugin
 import meteordevelopment.orbit.EventHandler
+import meteordevelopment.orbit.EventPriority
 import org.slf4j.LoggerFactory
+import org.springframework.ai.model.function.FunctionCallbackWrapper
+import org.springframework.ai.openai.OpenAiChatOptions
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Qualifier
+import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 import org.springframework.stereotype.Component
 
 /**
@@ -18,11 +25,12 @@ import org.springframework.stereotype.Component
  */
 @Component
 class QwenAiChatPlugin @Autowired constructor(
-    private val qwenService: QwenService
+    private val qwenService: QwenService,
+    @Qualifier("taskScheduler") private val task: ThreadPoolTaskScheduler,
 ) : BotPlugin {
 
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     fun onPrivateMessage(event: PrivateMessageEvent) {
         val bot = event.bot
         val msg = event.rawMessage
@@ -31,10 +39,11 @@ class QwenAiChatPlugin @Autowired constructor(
             val respMsg = qwenService.chat(userId, msg)
             if (!checkAiResp(respMsg)) return
             bot.sendPrivateMsg(userId, respMsg, false)
+            event.cancel()
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGH)
     fun onGroupMessage(event: GroupMessageEvent) {
         val bot = event.bot
         val msg = event.rawMessage
@@ -45,10 +54,25 @@ class QwenAiChatPlugin @Autowired constructor(
             if (null != atPattern.find(msg)) {
                 val extractedMessage = msg.replace(atPattern, "").trim()
                 if (extractedMessage.isEmpty()) return
-                val respMsg = qwenService.chat(userId, extractedMessage)
+
+                val options = OpenAiChatOptions.builder()
+                    .withModel("qwen-max")
+                    .withFunctionCallbacks(
+                        listOf(
+                            FunctionCallbackWrapper.builder<Request, Boolean>(
+                                ScheduleTaskServiceImpl(bot, userId, groupId, task)
+                            )
+                                .withName("SetScheduleTask")
+                                .withDescription("可以通过这个函数设置定时的任务，比如闹钟，提醒，等等")
+                                .build()
+                        )
+                    )
+
+                val respMsg = qwenService.chat(userId, extractedMessage, options.build())
                 if (!checkAiResp(respMsg)) return
                 val resp = bot.sendGroupMsg(groupId, "[CQ:at,qq=$userId] $respMsg", false)
                 log.info("$resp")
+                event.cancel()
             }
         }
     }

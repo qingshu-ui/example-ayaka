@@ -42,7 +42,7 @@ dependencies {
     implementation("com.microsoft.onnxruntime:onnxruntime:1.19.0")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation ("io.github.qingshu-ui:ayaka-spring-boot-starter:0.0.7-SNAPSHOT")
+    implementation ("io.github.qingshu-ui:ayaka-spring-boot-starter:0.0.9-SNAPSHOT")
 
     // spring
     implementation("org.springframework.boot:spring-boot-starter-web")

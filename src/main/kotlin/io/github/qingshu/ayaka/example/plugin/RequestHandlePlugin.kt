@@ -32,6 +32,7 @@ class RequestHandlePlugin : BotPlugin {
 
     @EventHandler
     fun onPrivateMessage(event: PrivateMessageEvent) {
+        log.info("aaabbb")
         val bot = event.bot!!
         val msg = event.rawMessage
         if ("get" == msg) {

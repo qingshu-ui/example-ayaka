@@ -1,4 +1,4 @@
-package io.github.qingshu.ayaka.example.service
+package io.github.qingshu.ayaka.example.bean
 
 /**
  * Copyright (c) 2024 qingshu.
@@ -7,5 +7,5 @@ package io.github.qingshu.ayaka.example.service
  * This project is licensed under the GPL-3.0 License.
  * See the LICENSE file for details.
  */
-interface SliderInferenceService {
+class QwenFunctionBeans {
 }

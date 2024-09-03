@@ -24,6 +24,7 @@ class SchedulePlugin : BotPlugin {
 
     @EventHandler
     fun onPrivate(event: PrivateMessageEvent) {
+        log.info("aaabbb")
         val bot = event.bot!!
         val msg = event.rawMessage
         if (msg == "like") {

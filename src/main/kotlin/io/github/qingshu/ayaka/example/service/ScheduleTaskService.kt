@@ -1,4 +1,4 @@
-package io.github.qingshu.ayaka.example.bean
+package io.github.qingshu.ayaka.example.service
 
 /**
  * Copyright (c) 2024 qingshu.
@@ -7,5 +7,5 @@ package io.github.qingshu.ayaka.example.bean
  * This project is licensed under the GPL-3.0 License.
  * See the LICENSE file for details.
  */
-class SliderFunctionBeans {
+interface ScheduleTaskService {
 }
