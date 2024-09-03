@@ -29,6 +29,7 @@ class QwenAiChatPlugin @Autowired constructor(
         val userId = event.userId
         if (null != msg && null != bot && null != userId) {
             val respMsg = qwenService.chat(userId, msg)
+            if (!checkAiResp(respMsg)) return
             bot.sendPrivateMsg(userId, respMsg, false)
         }
     }
@@ -45,6 +46,7 @@ class QwenAiChatPlugin @Autowired constructor(
                 val extractedMessage = msg.replace(atPattern, "").trim()
                 if (extractedMessage.isEmpty()) return
                 val respMsg = qwenService.chat(userId, extractedMessage)
+                if (!checkAiResp(respMsg)) return
                 val resp = bot.sendGroupMsg(groupId, "[CQ:at,qq=$userId] $respMsg", false)
                 log.info("$resp")
             }
@@ -53,5 +55,13 @@ class QwenAiChatPlugin @Autowired constructor(
 
     companion object {
         private val log = LoggerFactory.getLogger(QwenAiChatPlugin::class.java)
+
+        private fun checkAiResp(resp: String): Boolean {
+            if ("" == resp) {
+                log.warn("Unable to access SpringAI, response is null string")
+                return false
+            }
+            return true
+        }
     }
 }
