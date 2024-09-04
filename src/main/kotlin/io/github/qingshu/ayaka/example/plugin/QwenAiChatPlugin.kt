@@ -1,5 +1,6 @@
 package io.github.qingshu.ayaka.example.plugin
 
+import io.github.qingshu.ayaka.bot.Bot
 import io.github.qingshu.ayaka.dto.event.message.GroupMessageEvent
 import io.github.qingshu.ayaka.dto.event.message.PrivateMessageEvent
 import io.github.qingshu.ayaka.example.service.QwenService
@@ -36,7 +37,8 @@ class QwenAiChatPlugin @Autowired constructor(
         val msg = event.rawMessage
         val userId = event.userId
         if (null != msg && null != bot && null != userId) {
-            val respMsg = qwenService.chat(userId, msg)
+            val options = createAiOptions(bot, userId, task = task)
+            val respMsg = qwenService.chat(userId, msg, options)
             if (!checkAiResp(respMsg)) return
             bot.sendPrivateMsg(userId, respMsg, false)
             event.cancel()
@@ -55,26 +57,31 @@ class QwenAiChatPlugin @Autowired constructor(
                 val extractedMessage = msg.replace(atPattern, "").trim()
                 if (extractedMessage.isEmpty()) return
 
-                val options = OpenAiChatOptions.builder()
-                    .withModel("qwen-max")
-                    .withFunctionCallbacks(
-                        listOf(
-                            FunctionCallbackWrapper.builder<Request, Boolean>(
-                                ScheduleTaskServiceImpl(bot, userId, groupId, task)
-                            )
-                                .withName("SetScheduleTask")
-                                .withDescription("可以通过这个函数设置定时的任务，比如闹钟，提醒，等等")
-                                .build()
-                        )
-                    )
+                val options = createAiOptions(bot, userId, groupId, task)
 
-                val respMsg = qwenService.chat(userId, extractedMessage, options.build())
+                val respMsg = qwenService.chat(userId, extractedMessage, options)
                 if (!checkAiResp(respMsg)) return
                 val resp = bot.sendGroupMsg(groupId, "[CQ:at,qq=$userId] $respMsg", false)
                 log.info("$resp")
                 event.cancel()
             }
         }
+    }
+
+    fun createAiOptions(bot: Bot, userId: Long, groupId: Long = 0, task: ThreadPoolTaskScheduler): OpenAiChatOptions {
+        val options = OpenAiChatOptions.builder()
+            .withModel("qwen-max")
+            .withFunctionCallbacks(
+                listOf(
+                    FunctionCallbackWrapper.builder<Request, Boolean>(
+                        ScheduleTaskServiceImpl(bot, userId, groupId, task)
+                    )
+                        .withName("SetScheduleTask")
+                        .withDescription("可以通过这个函数设置定时的任务，比如闹钟，提醒，等等")
+                        .build()
+                )
+            )
+        return options.build()
     }
 
     companion object {
