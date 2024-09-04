@@ -38,7 +38,7 @@ class QwenServiceImpl @Autowired constructor(
 
         if (conversationHistory.isEmpty() || conversationHistory.first() !is SystemMessage) {
             val systemMessage =
-                SystemMessage("你是一名幽默的脱口秀老师，你应该以幽默风格回复任何问题。你应该在10字以内回答，禁止长篇大论。")
+                SystemMessage("你是一名助手，你应该在10字以内回答，禁止长篇大论。")
             conversationHistory.add(0, systemMessage)
         }
         val userMessage = UserMessage(message)
