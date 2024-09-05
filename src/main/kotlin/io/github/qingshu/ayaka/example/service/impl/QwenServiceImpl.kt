@@ -54,13 +54,13 @@ class QwenServiceImpl @Autowired constructor(
             }
         }
 
-        var resp = ""
+        lateinit var assistantMessage: AssistantMessage
         try {
-            resp = model.call(Prompt(conversationHistory, options)).result.output.content
+            assistantMessage = model.call(Prompt(conversationHistory, options)).result.output
         } catch (e: Exception) {
             println(e.message)
         }
-        conversationHistory.add(AssistantMessage(resp))
-        return resp
+        conversationHistory.add(assistantMessage)
+        return assistantMessage.content
     }
 }

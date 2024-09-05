@@ -15,12 +15,11 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler
 @Configuration
 class SchedulerConfig {
 
-    @Bean
-    @ConditionalOnMissingBean
+    @Bean("ayakaTaskScheduler")
     fun taskScheduler(): ThreadPoolTaskScheduler {
         return ThreadPoolTaskScheduler().apply {
             poolSize = 10
-            setThreadNamePrefix("Scheduled-task")
+            setThreadNamePrefix("ayaka-task")
         }
     }
 }

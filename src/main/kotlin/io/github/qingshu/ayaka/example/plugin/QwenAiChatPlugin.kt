@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component
 @Component
 class QwenAiChatPlugin @Autowired constructor(
     private val qwenService: QwenService,
-    @Qualifier("taskScheduler") private val task: ThreadPoolTaskScheduler,
+    @Qualifier("ayakaTaskScheduler") private val task: ThreadPoolTaskScheduler,
 ) : BotPlugin {
 
 
