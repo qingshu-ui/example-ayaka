@@ -7,6 +7,7 @@ import io.github.qingshu.ayaka.example.service.QwenService
 import io.github.qingshu.ayaka.example.service.impl.Request
 import io.github.qingshu.ayaka.example.service.impl.ScheduleTaskServiceImpl
 import io.github.qingshu.ayaka.plugin.BotPlugin
+import io.github.qingshu.ayaka.utils.MsgUtils
 import meteordevelopment.orbit.EventHandler
 import meteordevelopment.orbit.EventPriority
 import org.slf4j.LoggerFactory
@@ -49,6 +50,7 @@ class QwenAiChatPlugin @Autowired constructor(
     fun onGroupMessage(event: GroupMessageEvent) {
         val bot = event.bot
         val msg = event.rawMessage
+        val msgId = event.messageId
         val userId = event.userId
         val groupId = event.groupId
         if (null != msg && null != bot && null != userId && null != groupId) {
@@ -61,7 +63,7 @@ class QwenAiChatPlugin @Autowired constructor(
 
                 val respMsg = qwenService.chat(userId, extractedMessage, options)
                 if (!checkAiResp(respMsg)) return
-                val resp = bot.sendGroupMsg(groupId, "[CQ:at,qq=$userId] $respMsg", false)
+                val resp = bot.sendGroupMsg(groupId, MsgUtils.builder().reply(msgId!!).text(respMsg).build(), false)
                 log.info("$resp")
                 event.cancel()
             }
