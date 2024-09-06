@@ -38,10 +38,7 @@ class QwenServiceImpl @Autowired constructor(
 
         if (conversationHistory.isEmpty() || conversationHistory.first() !is SystemMessage) {
             val systemMessage =
-                SystemMessage(
-                    "你是一名助手，你应该在10字以内回答，禁止长篇大论。"+
-                            "禁止使用markdown格式展示图片，比如：![Detected Objects](C:\\Users\\17186\\IdeaProjects\\example-ayaka\\detection\\d3ee37bb-7e91-4135-a077-ce1724e1e1a4.png)，" +
-                            "应该使用 [CQ:image,file=C:\\Users\\17186\\IdeaProjects\\example-ayaka\\detection\\d3ee37bb-7e91-4135-a077-ce1724e1e1a4.png]")
+                SystemMessage("你是图片检测模型，你只需要调用函数处理图片和展示图片，你只能回复至多2个字。")
             conversationHistory.add(0, systemMessage)
         }
         val userMessage = UserMessage(message)

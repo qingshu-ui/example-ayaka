@@ -1,9 +1,10 @@
 package io.github.qingshu.ayaka.example.plugin
 
-import io.github.qingshu.ayaka.bot.Bot
 import io.github.qingshu.ayaka.dto.event.message.GroupMessageEvent
+import io.github.qingshu.ayaka.dto.event.message.MessageEvent
 import io.github.qingshu.ayaka.dto.event.message.PrivateMessageEvent
 import io.github.qingshu.ayaka.example.function.ScheduleTaskFunction
+import io.github.qingshu.ayaka.example.function.ShowImageFunction
 import io.github.qingshu.ayaka.example.service.QwenService
 import io.github.qingshu.ayaka.example.yolo.YOLO
 import io.github.qingshu.ayaka.plugin.BotPlugin
@@ -39,7 +40,7 @@ class QwenAiChatPlugin @Autowired constructor(
         val msg = event.rawMessage
         val userId = event.userId
         if (null != msg && null != bot && null != userId) {
-            val options = createAiOptions(bot, userId, task = task)
+            val options = createAiOptions(event, task = task)
             val respMsg = qwenService.chat(userId, msg, options)
             if (!checkAiResp(respMsg)) return
             bot.sendPrivateMsg(userId, respMsg, false)
@@ -60,7 +61,7 @@ class QwenAiChatPlugin @Autowired constructor(
                 val extractedMessage = msg.replace(atPattern, "").trim()
                 if (extractedMessage.isEmpty()) return
 
-                val options = createAiOptions(bot, userId, groupId, task)
+                val options = createAiOptions(event, task)
 
                 val respMsg = qwenService.chat(userId, extractedMessage, options)
                 if (!checkAiResp(respMsg)) return
@@ -71,7 +72,13 @@ class QwenAiChatPlugin @Autowired constructor(
         }
     }
 
-    fun createAiOptions(bot: Bot, userId: Long, groupId: Long = 0, task: ThreadPoolTaskScheduler): OpenAiChatOptions {
+    fun createAiOptions(event: MessageEvent, task: ThreadPoolTaskScheduler): OpenAiChatOptions {
+        val bot = event.bot!!
+        val userId = event.userId!!
+        var groupId = 0L
+        if (event is GroupMessageEvent) {
+            groupId = event.groupId ?: 0L
+        }
         val options = OpenAiChatOptions.builder()
             .withModel("qwen-max")
             .withFunctionCallbacks(
@@ -82,6 +89,14 @@ class QwenAiChatPlugin @Autowired constructor(
                         .withName("SetScheduleTask")
                         .withDescription("可以通过这个函数设置定时的任务，比如闹钟，提醒，等等")
                         .build(),
+                    FunctionCallbackWrapper.builder(
+                        ShowImageFunction(event = event)
+                    )
+                        .withName("showImageWithPath")
+                        .withDescription(
+                            "将传入的图片路径或者网络地址展示出来"
+                        )
+                        .build()
                 )
             )
             .withFunction("detectObjectInImage")
