@@ -29,12 +29,13 @@ class LoggerAspect {
     fun applyMethodInFunction(joinPoint: ProceedingJoinPoint): Any {
         val startTime = System.currentTimeMillis()
         return try {
+            val className = joinPoint.signature.declaringType.simpleName
             val methodName = joinPoint.signature.name
-            log.info("$methodName started")
+            log.info("$className.$methodName started")
             val result = joinPoint.proceed()
             val endTime = System.currentTimeMillis()
             val duration = endTime - startTime
-            log.info("$methodName executed in $duration ms")
+            log.info("$className.$methodName executed in $duration ms")
             result ?: Any()
         } catch (e: Throwable) {
             log.error("Process error ${e.message}")
