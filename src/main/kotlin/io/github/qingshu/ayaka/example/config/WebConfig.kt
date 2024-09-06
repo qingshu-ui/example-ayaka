@@ -1,6 +1,5 @@
-package io.github.qingshu.ayaka.example.bean
+package io.github.qingshu.ayaka.example.config
 
-import io.github.qingshu.ayaka.example.config.CacheControlInterceptor
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer

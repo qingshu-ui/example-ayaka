@@ -28,7 +28,7 @@ ayaka:
   plugin:
     plugin-package: io.github.qingshu.ayaka.example
   slider:
-    enable: false
+    enable: true
 
 # log setup
 logging:

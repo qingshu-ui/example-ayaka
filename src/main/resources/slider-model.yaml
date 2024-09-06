@@ -1,6 +1,2 @@
 slider-label: model/slider-label.names
-slider-v8n-model: model/slider-yolov8n.onnx
-slider-v8s-model: model/slider-yolov8s.onnx
-slider-v8m-model: model/slider-yolov8m.onnx
-slider-v8l-model: model/slider-yolov8l.onnx
-slider-v8x-model: model/slider-yolov8x.onnx
+slider-model: model/slider-yolo.onnx

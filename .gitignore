@@ -42,3 +42,4 @@ logs/
 config.yaml
 slider-model.yaml
 model
+detection

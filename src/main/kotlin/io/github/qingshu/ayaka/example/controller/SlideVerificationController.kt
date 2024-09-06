@@ -2,7 +2,6 @@ package io.github.qingshu.ayaka.example.controller
 
 import io.github.qingshu.ayaka.example.service.ImageProcessingService
 import io.github.qingshu.ayaka.example.yolo.YOLO
-import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,38 +21,13 @@ import org.springframework.web.multipart.MultipartFile
 @RequestMapping("/api/yolo")
 @ConditionalOnProperty(prefix = "ayaka.slider", name = ["enable"], havingValue = "true", matchIfMissing = true)
 class SlideVerificationController(
-    @Qualifier("sliderYoloV8n") private val modelV8n: YOLO,
-    @Qualifier("sliderYoloV8s") private val modelV8s: YOLO,
-    @Qualifier("sliderYoloV8m") private val modelV8m: YOLO,
-    @Qualifier("sliderYoloV8l") private val modelV8l: YOLO,
-    @Qualifier("sliderYoloV8x") private val modelV8x: YOLO,
+    private val sliderModel: YOLO,
     private val imageProcess: ImageProcessingService
 ) {
 
-    @PostMapping("/slider-v8n")
+    @PostMapping("/detect")
     fun sliderV8n(@RequestParam("image") file: MultipartFile): ResponseEntity<Map<String, Any>> {
-        return makeResp(file, modelV8n)
-    }
-
-    @PostMapping("/slider-v8s")
-    fun sliderV8s(@RequestParam("image") file: MultipartFile): ResponseEntity<Map<String, Any>> {
-        return makeResp(file, modelV8s)
-    }
-
-    @PostMapping("/slider-v8m")
-    fun sliderV8m(@RequestParam("image") file: MultipartFile): ResponseEntity<Map<String, Any>> {
-        return makeResp(file, modelV8m)
-    }
-
-    @PostMapping("/slider-v8l")
-    fun sliderV8l(@RequestParam("image") file: MultipartFile): ResponseEntity<Map<String, Any>> {
-        return makeResp(file, modelV8l)
-    }
-
-
-    @PostMapping("/slider-v8x")
-    fun sliderV8x(@RequestParam("image") file: MultipartFile): ResponseEntity<Map<String, Any>> {
-        return makeResp(file, modelV8x)
+        return makeResp(file, sliderModel)
     }
 
     private fun makeResp(file: MultipartFile, model: YOLO): ResponseEntity<Map<String, Any>> {

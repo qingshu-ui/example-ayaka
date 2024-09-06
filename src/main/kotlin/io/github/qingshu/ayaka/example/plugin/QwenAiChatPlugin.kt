@@ -3,9 +3,9 @@ package io.github.qingshu.ayaka.example.plugin
 import io.github.qingshu.ayaka.bot.Bot
 import io.github.qingshu.ayaka.dto.event.message.GroupMessageEvent
 import io.github.qingshu.ayaka.dto.event.message.PrivateMessageEvent
+import io.github.qingshu.ayaka.example.function.ScheduleTaskFunction
 import io.github.qingshu.ayaka.example.service.QwenService
-import io.github.qingshu.ayaka.example.service.impl.Request
-import io.github.qingshu.ayaka.example.service.impl.ScheduleTaskServiceImpl
+import io.github.qingshu.ayaka.example.yolo.YOLO
 import io.github.qingshu.ayaka.plugin.BotPlugin
 import io.github.qingshu.ayaka.utils.MsgUtils
 import meteordevelopment.orbit.EventHandler
@@ -29,6 +29,7 @@ import org.springframework.stereotype.Component
 class QwenAiChatPlugin @Autowired constructor(
     private val qwenService: QwenService,
     @Qualifier("ayakaTaskScheduler") private val task: ThreadPoolTaskScheduler,
+    private val sliderModel: YOLO
 ) : BotPlugin {
 
 
@@ -75,14 +76,15 @@ class QwenAiChatPlugin @Autowired constructor(
             .withModel("qwen-max")
             .withFunctionCallbacks(
                 listOf(
-                    FunctionCallbackWrapper.builder<Request, Boolean>(
-                        ScheduleTaskServiceImpl(bot, userId, groupId, task)
+                    FunctionCallbackWrapper.builder(
+                        ScheduleTaskFunction(bot, userId, groupId, task)
                     )
                         .withName("SetScheduleTask")
                         .withDescription("可以通过这个函数设置定时的任务，比如闹钟，提醒，等等")
-                        .build()
+                        .build(),
                 )
             )
+            .withFunction("detectObjectInImage")
         return options.build()
     }
 
