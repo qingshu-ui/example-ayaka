@@ -3,9 +3,10 @@ package io.github.qingshu.ayaka.example.plugin
 import io.github.qingshu.ayaka.dto.event.message.PrivateMessageEvent
 import io.github.qingshu.ayaka.dto.event.request.FriendAddRequestEvent
 import io.github.qingshu.ayaka.dto.event.request.GroupAddRequestEvent
+import io.github.qingshu.ayaka.example.annotation.Slf4j
+import io.github.qingshu.ayaka.example.annotation.Slf4j.Companion.log
 import io.github.qingshu.ayaka.plugin.BotPlugin
 import meteordevelopment.orbit.EventHandler
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 /**
@@ -15,8 +16,9 @@ import org.springframework.stereotype.Component
  * This project is licensed under the GPL-3.0 License.
  * See the LICENSE file for details.
  */
+@Slf4j
 @Component
-class RequestHandlePlugin : BotPlugin {
+class RequestHandle : BotPlugin {
 
     @EventHandler
     fun onFriendRequest(event: FriendAddRequestEvent) {
@@ -32,7 +34,6 @@ class RequestHandlePlugin : BotPlugin {
 
     @EventHandler
     fun onPrivateMessage(event: PrivateMessageEvent) {
-        log.info("aaabbb")
         val bot = event.bot!!
         val msg = event.rawMessage
         if ("get" == msg) {
@@ -57,9 +58,5 @@ class RequestHandlePlugin : BotPlugin {
         rel.run {
             log.info("Process group add: ${this.status}")
         }
-    }
-
-    companion object {
-        private val log = LoggerFactory.getLogger(RequestHandlePlugin::class.java)
     }
 }

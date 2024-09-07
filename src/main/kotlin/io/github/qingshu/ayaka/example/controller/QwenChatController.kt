@@ -15,17 +15,12 @@ import org.springframework.web.bind.annotation.RestController
  * See the LICENSE file for details.
  */
 @RestController
-@RequestMapping("/api/chat")
 class QwenChatController @Autowired constructor(
     private val qwenService: QwenService
 ) {
 
-    @RequestMapping("/qwen")
+    @RequestMapping("/api/chat")
     fun chat(@RequestParam("id") userId: Long, @RequestParam("msg") message: String): String {
         return qwenService.chat(userId, message)
-    }
-
-    companion object {
-        private val log = LoggerFactory.getLogger(QwenChatController::class.java)
     }
 }

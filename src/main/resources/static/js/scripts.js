@@ -28,7 +28,7 @@ function processImage(imgSrc, file) {
 
     // Send the image file to the server
     $.ajax({
-        url: `/api/yolo/detect}`,
+        url: `/api/yolo/detect`,
         type: 'POST',
         data: formData,
         processData: false,

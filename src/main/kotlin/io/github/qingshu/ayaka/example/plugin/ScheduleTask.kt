@@ -16,15 +16,14 @@ import org.springframework.stereotype.Component
  * This project is licensed under the GPL-3.0 License.
  * See the LICENSE file for details.
  */
-@Component("secondMyPlugin")
-class SchedulePlugin : BotPlugin {
+@Component
+class ScheduleTask : BotPlugin {
 
     @Autowired
     lateinit var botContainer: BotContainer
 
     @EventHandler
     fun onPrivate(event: PrivateMessageEvent) {
-        log.info("aaabbb")
         val bot = event.bot!!
         val msg = event.rawMessage
         if (msg == "like") {
@@ -62,6 +61,6 @@ class SchedulePlugin : BotPlugin {
 
 
     companion object {
-        private val log = LoggerFactory.getLogger(SchedulePlugin::class.java)
+        private val log = LoggerFactory.getLogger(ScheduleTask::class.java)
     }
 }

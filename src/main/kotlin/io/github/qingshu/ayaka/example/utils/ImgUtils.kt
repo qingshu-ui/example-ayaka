@@ -63,13 +63,21 @@ object ImgUtils {
                 Point(bbox[0].toDouble(), bbox[1].toDouble()),
                 Point(bbox[2].toDouble(), bbox[3].toDouble()),
                 color,
-                2
+                1
             )
             Imgproc.putText(
                 img,
                 detection.label,
+                Point(bbox[0] - 1.toDouble(), bbox[1] - 20.toDouble()),
+                Imgproc.FONT_HERSHEY_PLAIN,
+                1.0,
+                color
+            )
+            Imgproc.putText(
+                img,
+                String.format("%.2f", detection.confidence),
                 Point(bbox[0] - 1.toDouble(), bbox[1] - 5.toDouble()),
-                1,
+                Imgproc.FONT_HERSHEY_PLAIN,
                 1.0,
                 color
             )

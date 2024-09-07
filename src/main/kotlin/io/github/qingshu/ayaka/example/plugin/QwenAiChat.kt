@@ -3,6 +3,8 @@ package io.github.qingshu.ayaka.example.plugin
 import io.github.qingshu.ayaka.dto.event.message.GroupMessageEvent
 import io.github.qingshu.ayaka.dto.event.message.MessageEvent
 import io.github.qingshu.ayaka.dto.event.message.PrivateMessageEvent
+import io.github.qingshu.ayaka.example.annotation.Slf4j
+import io.github.qingshu.ayaka.example.annotation.Slf4j.Companion.log
 import io.github.qingshu.ayaka.example.function.ScheduleTaskFunction
 import io.github.qingshu.ayaka.example.function.ShowImageFunction
 import io.github.qingshu.ayaka.example.service.QwenService
@@ -10,8 +12,6 @@ import io.github.qingshu.ayaka.example.yolo.YOLO
 import io.github.qingshu.ayaka.plugin.BotPlugin
 import io.github.qingshu.ayaka.utils.MsgUtils
 import meteordevelopment.orbit.EventHandler
-import meteordevelopment.orbit.EventPriority
-import org.slf4j.LoggerFactory
 import org.springframework.ai.model.function.FunctionCallbackWrapper
 import org.springframework.ai.openai.OpenAiChatOptions
 import org.springframework.beans.factory.annotation.Autowired
@@ -26,15 +26,16 @@ import org.springframework.stereotype.Component
  * This project is licensed under the GPL-3.0 License.
  * See the LICENSE file for details.
  */
+@Slf4j
 @Component
-class QwenAiChatPlugin @Autowired constructor(
+class QwenAiChat @Autowired constructor(
     private val qwenService: QwenService,
     @Qualifier("ayakaTaskScheduler") private val task: ThreadPoolTaskScheduler,
     private val sliderModel: YOLO
 ) : BotPlugin {
 
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler()
     fun onPrivateMessage(event: PrivateMessageEvent) {
         val bot = event.bot
         val msg = event.rawMessage
@@ -44,11 +45,10 @@ class QwenAiChatPlugin @Autowired constructor(
             val respMsg = qwenService.chat(userId, msg, options)
             if (!checkAiResp(respMsg)) return
             bot.sendPrivateMsg(userId, respMsg, false)
-            event.cancel()
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGH)
+    @EventHandler()
     fun onGroupMessage(event: GroupMessageEvent) {
         val bot = event.bot
         val msg = event.rawMessage
@@ -67,7 +67,6 @@ class QwenAiChatPlugin @Autowired constructor(
                 if (!checkAiResp(respMsg)) return
                 val resp = bot.sendGroupMsg(groupId, MsgUtils.builder().reply(msgId!!).text(respMsg).build(), false)
                 log.info("$resp")
-                event.cancel()
             }
         }
     }
@@ -80,7 +79,7 @@ class QwenAiChatPlugin @Autowired constructor(
             groupId = event.groupId ?: 0L
         }
         val options = OpenAiChatOptions.builder()
-            .withModel("qwen-max")
+            .withModel("qwen-max-0428")
             .withFunctionCallbacks(
                 listOf(
                     FunctionCallbackWrapper.builder(
@@ -103,9 +102,8 @@ class QwenAiChatPlugin @Autowired constructor(
         return options.build()
     }
 
+    @Slf4j
     companion object {
-        private val log = LoggerFactory.getLogger(QwenAiChatPlugin::class.java)
-
         private fun checkAiResp(resp: String): Boolean {
             if ("" == resp) {
                 log.warn("Unable to access SpringAI, response is null string")

@@ -1,5 +1,7 @@
 package io.github.qingshu.ayaka.example.filter
 
+import io.github.qingshu.ayaka.example.annotation.Slf4j
+import io.github.qingshu.ayaka.example.annotation.Slf4j.Companion.log
 import jakarta.servlet.Filter
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletRequest
@@ -15,6 +17,7 @@ import org.slf4j.LoggerFactory
  * This project is licensed under the GPL-3.0 License.
  * See the LICENSE file for details.
  */
+@Slf4j
 @WebFilter(urlPatterns = ["/*"])
 class InvalidRequestFilter : Filter {
 
@@ -33,9 +36,5 @@ class InvalidRequestFilter : Filter {
             }
         }
         p2?.doFilter(p0, p1)
-    }
-
-    companion object {
-        private val log = LoggerFactory.getLogger(InvalidRequestFilter::class.java)
     }
 }

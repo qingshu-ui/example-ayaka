@@ -1,6 +1,7 @@
 package io.github.qingshu.ayaka.example.config
 
-import org.slf4j.LoggerFactory
+import io.github.qingshu.ayaka.example.annotation.Slf4j
+import io.github.qingshu.ayaka.example.annotation.Slf4j.Companion.log
 import org.springframework.beans.factory.config.YamlPropertiesFactoryBean
 import org.springframework.boot.context.properties.ConfigurationProperties
 import org.springframework.core.io.ClassPathResource
@@ -20,6 +21,7 @@ import kotlin.system.exitProcess
  * This project is licensed under the GPL-3.0 License.
  * See the LICENSE file for details.
  */
+@Slf4j
 @Component
 @ConfigurationProperties(prefix = "ayaka.slider")
 class ModelProperties {
@@ -58,9 +60,5 @@ class ModelProperties {
 
     fun get(key: String): String {
         return properties.getProperty(key) ?: ""
-    }
-
-    companion object {
-        private val log = LoggerFactory.getLogger(ModelProperties::class.java)
     }
 }

@@ -28,7 +28,7 @@ class QwenServiceImpl @Autowired constructor(
     @Synchronized
     override fun chat(user: Long, message: String): String {
         val options = OpenAiChatOptions.builder()
-            .withModel("qwen-long")
+            .withModel("qwen-max-0428")
             .build()
         return this.chat(user, message, options)
     }

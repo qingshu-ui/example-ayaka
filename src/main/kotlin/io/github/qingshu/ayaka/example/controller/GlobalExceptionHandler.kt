@@ -1,6 +1,5 @@
 package io.github.qingshu.ayaka.example.controller
 
-import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -21,9 +20,5 @@ class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(
             mapOf("error" to "Invalid multipart request")
         )
-    }
-
-    companion object {
-        private val log = LoggerFactory.getLogger(GlobalExceptionHandler::class.java)
     }
 }
