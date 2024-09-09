@@ -1,7 +1,8 @@
 package io.github.qingshu.ayaka.example.controller
 
-import io.github.qingshu.ayaka.example.service.ImageProcessingService
 import io.github.qingshu.ayaka.example.yolo.YOLO
+import org.opencv.core.MatOfByte
+import org.opencv.imgcodecs.Imgcodecs
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -22,7 +23,6 @@ import org.springframework.web.multipart.MultipartFile
 @ConditionalOnProperty(prefix = "ayaka.slider", name = ["enable"], havingValue = "true", matchIfMissing = true)
 class SlideVerificationController(
     private val sliderModel: YOLO,
-    private val imageProcess: ImageProcessingService
 ) {
 
     @PostMapping("/detect")
@@ -36,7 +36,7 @@ class SlideVerificationController(
                 mapOf("error" to "Invalid image format")
             )
         }
-        val mat = imageProcess.convertMultipartFileToMat(file)
+        val mat = Imgcodecs.imdecode(MatOfByte(*file.bytes), Imgcodecs.IMREAD_COLOR)
         if (mat.empty()) {
             return ResponseEntity.badRequest().body(
                 mapOf("error" to "Could not read image")

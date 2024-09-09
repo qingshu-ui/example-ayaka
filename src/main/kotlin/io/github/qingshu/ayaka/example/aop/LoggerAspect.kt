@@ -27,7 +27,10 @@ class LoggerAspect {
     @Pointcut("execution(* io.github.qingshu.ayaka.example.function..*.apply(..))")
     fun functionCall(){}
 
-    @Around("functionCall() || pluginCall()")
+    @Pointcut("execution(* io.github.qingshu.ayaka.example.controller..*.*(..))")
+    fun controller(){}
+
+    @Around("functionCall() || pluginCall() || controller()")
     fun applyMethodInFunction(joinPoint: ProceedingJoinPoint): Any {
         val className = joinPoint.signature.declaringType.simpleName
         val methodName = joinPoint.signature.name
