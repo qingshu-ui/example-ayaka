@@ -59,6 +59,7 @@ class QwenServiceImpl @Autowired constructor(
             assistantMessage = model.call(Prompt(conversationHistory, options)).result.output
         } catch (e: Exception) {
             println(e.message)
+            assistantMessage = AssistantMessage(e.message)
         }
         conversationHistory.add(assistantMessage)
         return assistantMessage.content

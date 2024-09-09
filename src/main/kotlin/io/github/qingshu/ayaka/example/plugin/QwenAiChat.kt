@@ -43,7 +43,6 @@ class QwenAiChat @Autowired constructor(
         if (null != msg && null != bot && null != userId) {
             val options = createAiOptions(event, task = task)
             val respMsg = qwenService.chat(userId, msg, options)
-            if (!checkAiResp(respMsg)) return
             bot.sendPrivateMsg(userId, respMsg, false)
         }
     }
@@ -64,7 +63,6 @@ class QwenAiChat @Autowired constructor(
                 val options = createAiOptions(event, task)
 
                 val respMsg = qwenService.chat(userId, extractedMessage, options)
-                if (!checkAiResp(respMsg)) return
                 val resp = bot.sendGroupMsg(groupId, MsgUtils.builder().reply(msgId!!).text(respMsg).build(), false)
                 log.info("$resp")
             }
@@ -79,7 +77,7 @@ class QwenAiChat @Autowired constructor(
             groupId = event.groupId ?: 0L
         }
         val options = OpenAiChatOptions.builder()
-            .withModel("qwen-max-0428")
+            .withModel("qwen-max")
             .withFunctionCallbacks(
                 listOf(
                     FunctionCallbackWrapper.builder(
@@ -100,16 +98,5 @@ class QwenAiChat @Autowired constructor(
             )
             .withFunction("detectObjectInImage")
         return options.build()
-    }
-
-    @Slf4j
-    companion object {
-        private fun checkAiResp(resp: String): Boolean {
-            if ("" == resp) {
-                log.warn("Unable to access SpringAI, response is null string")
-                return false
-            }
-            return true
-        }
     }
 }

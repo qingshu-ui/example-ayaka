@@ -22,7 +22,7 @@ import java.util.stream.Collectors
  * This project is licensed under the GPL-3.0 License.
  * See the LICENSE file for details.
  */
-class YOLO {
+class YOLO : AutoCloseable {
     private val parent: AbstractONNX = AbstractONNX()
 
     private lateinit var env: OrtEnvironment
@@ -142,13 +142,17 @@ class YOLO {
 
         // 图片变换以匹配模型需要的大小
         val resizedMat = parent.scaleByPadding(mat, inputSize)
+        lateinit var whcArr: FloatArray
+        try {
+            // 归一化
+            resizedMat.convertTo(resizedMat, CvType.CV_32FC3, 1.0 / 255)
 
-        // 归一化
-        resizedMat.convertTo(resizedMat, CvType.CV_32FC3, 1.0 / 255)
-
-        // 创建输入张量
-        val whcArr = FloatArray((inputSize.width * inputSize.height * mat.channels()).toInt())
-        resizedMat.get(0, 0, whcArr)
+            // 创建输入张量
+            whcArr = FloatArray((inputSize.width * inputSize.height * mat.channels()).toInt())
+            resizedMat.get(0, 0, whcArr)
+        }finally {
+            resizedMat.release()
+        }
         // 张量变换：whc to chw
         val inputBuffer = FloatBuffer.wrap(parent.whc2cwh(whcArr))
         val inputTensor = OnnxTensor.createTensor(env, inputBuffer, inputShape)
@@ -219,6 +223,16 @@ class YOLO {
         }
         // 返回最终的结果
         return detectionList
+    }
+
+    override fun close() {
+        try {
+            session.close()
+            env.close()
+            // log.info("ONNX resources has been closed.")
+        } catch (e: IOException) {
+            log.error("Error closing ONNX resources: ${e.message}")
+        }
     }
 
     companion object {

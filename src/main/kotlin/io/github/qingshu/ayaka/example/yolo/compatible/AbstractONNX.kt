@@ -33,17 +33,21 @@ class AbstractONNX : ONNX {
 
         // 创建一个用于缩放后图像的 Mat 对象
         val scaledImage = Mat()
-        // 缩放源图像
-        Imgproc.resize(mat, scaledImage, newSize)
+        try {
+            // 缩放源图像
+            Imgproc.resize(mat, scaledImage, newSize)
 
-        // 计算缩放后图像在目标图像中的偏移量，以使其居中对齐
-        val xOffset = ((targetSize.width - newSize.width) / 2).toInt()
-        val yOffset = ((targetSize.height - newSize.height) / 2).toInt()
+            // 计算缩放后图像在目标图像中的偏移量，以使其居中对齐
+            val xOffset = ((targetSize.width - newSize.width) / 2).toInt()
+            val yOffset = ((targetSize.height - newSize.height) / 2).toInt()
 
-        // 将缩放后的图像复制到目标图像的中心区域
-        scaledImage.copyTo(
-            dst.rowRange(yOffset, yOffset + newSize.height.toInt()).colRange(xOffset, xOffset + newSize.width.toInt())
-        )
+            // 将缩放后的图像复制到目标图像的中心区域
+            scaledImage.copyTo(
+                dst.rowRange(yOffset, yOffset + newSize.height.toInt()).colRange(xOffset, xOffset + newSize.width.toInt())
+            )
+        }finally {
+            scaledImage.release()
+        }
 
         // 返回结果
         return dst

@@ -8,6 +8,8 @@ import org.opencv.core.Scalar
 import org.opencv.imgproc.Imgproc
 import java.awt.image.BufferedImage
 import java.awt.image.DataBufferByte
+import java.net.HttpURLConnection
+import java.net.URL
 
 object ImgUtils {
 
