@@ -28,7 +28,7 @@ class AbstractONNX : ONNX {
         val newSize = Size(mat.width() * aspectRatio, mat.height() * aspectRatio)
 
         // 创建一个目标图像，并初始化为0（黑色），其尺寸为目标大小
-        val dst = Mat.zeros(targetSize.height.toInt(), targetSize.width.toInt(), mat.type())
+        val dst = Mat.zeros(targetSize.width.toInt(), targetSize.height.toInt(), mat.type())
         dst.setTo(Scalar(114.0, 114.0, 114.0))
 
         // 创建一个用于缩放后图像的 Mat 对象

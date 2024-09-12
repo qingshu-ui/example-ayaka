@@ -84,7 +84,9 @@ class YOLO : AutoCloseable {
 
     fun initializeLabel(reader: BufferedReader) {
         try {
-            labelNames = reader.lines().map(String::trim).collect(Collectors.toList())
+            reader.use {
+                labelNames = reader.lines().map(String::trim).collect(Collectors.toList())
+            }
         } catch (e: IOException) {
             log.error("Could not load label, because of ${e.message}")
         }
@@ -97,7 +99,6 @@ class YOLO : AutoCloseable {
      * @param iou [Float] 交并比，用来处理边界框重叠的参数
      * @return result [ArrayList]
      */
-    @Synchronized
     fun detectObject(mat: Mat, conf: Float = 0.25f, iou: Float = 0.5f): ArrayList<Detection> {
         this.conf = conf
         this.iou = iou
@@ -121,7 +122,6 @@ class YOLO : AutoCloseable {
      * @param iou [Float] 交并比，用来处理边界框重叠的参数
      * @return result [ArrayList]
      */
-    @Synchronized
     fun detectObject(imagePath: String, conf: Float = 0.25f, iou: Float = 0.5f): ArrayList<Detection> {
         val imgMat = Imgcodecs.imread(imagePath)
         if (imgMat.empty()) {
@@ -167,10 +167,11 @@ class YOLO : AutoCloseable {
      */
     @Suppress("UNCHECKED_CAST")
     private fun inference(input: Map<String, OnnxTensor>): Array<FloatArray> {
-        val result = session.run(input)
-        val predictions = (result[0].value as Array<Array<FloatArray>>)[0]
-        result.close()
-        return predictions
+        return synchronized(session){
+            session.run(input).use { result ->
+                (result[0].value as Array<Array<FloatArray>>)[0]
+            }
+        }
     }
 
     /**

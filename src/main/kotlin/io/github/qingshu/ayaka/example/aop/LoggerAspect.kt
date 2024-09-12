@@ -43,7 +43,7 @@ class LoggerAspect {
             log.info("$className.$methodName executed in $duration ms")
             result ?: Any()
         } catch (e: Throwable) {
-            log.error("$className.$methodName caught error ${e.message}")
+            log.error("$className.$methodName caught error ${e.javaClass.simpleName}: ${e.message}")
             return Any()
         }
     }

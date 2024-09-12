@@ -12,17 +12,17 @@ spring:
         api-key: ${SPRING_AI_OPENAI_API_KEY}
         base-url: https://dashscope.aliyuncs.com/compatible-mode
         options:
-          model: qwen-long
+          model: qwen-max
 
 # ayaka setup
 ayaka:
   ws:
     server:
-      enable: false
       url: /ws/ayaka
+      enable: false
     client:
-      enable: true
       url: ws://localhost:5800
+      enable: true
   task:
     thread-name-prefix: ayaka-async-task
   plugin:
