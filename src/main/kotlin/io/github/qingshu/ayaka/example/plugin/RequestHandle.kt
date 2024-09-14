@@ -6,7 +6,6 @@ import io.github.qingshu.ayaka.dto.event.request.GroupAddRequestEvent
 import io.github.qingshu.ayaka.example.annotation.Slf4j
 import io.github.qingshu.ayaka.example.annotation.Slf4j.Companion.log
 import io.github.qingshu.ayaka.plugin.BotPlugin
-import meteordevelopment.orbit.EventHandler
 import org.springframework.stereotype.Component
 
 /**

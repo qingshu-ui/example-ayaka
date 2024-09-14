@@ -16,13 +16,6 @@ spring:
 
 # ayaka setup
 ayaka:
-  ws:
-    server:
-      url: /ws/ayaka
-      enable: false
-    client:
-      url: ws://localhost:5800
-      enable: false
   task:
     thread-name-prefix: ayaka-async-task
   plugin:
