@@ -10,7 +10,6 @@ import io.github.qingshu.ayaka.example.utils.NetUtils
 import io.github.qingshu.ayaka.example.utils.RegexUtils
 import io.github.qingshu.ayaka.plugin.BotPlugin
 import io.github.qingshu.ayaka.utils.MsgUtils
-import meteordevelopment.orbit.EventHandler
 import org.springframework.stereotype.Component
 
 /**
@@ -39,7 +38,7 @@ class DouYinParse : BotPlugin {
         }.detail
     }
 
-    @EventHandler
+    // @EventHandler
     fun handler(event: AnyMessageEvent) {
         if (!RegexUtils.check(event.message ?: "", Regex.DOU_YIN_SHORT_URL)) return
         val data = request(event.message!!)

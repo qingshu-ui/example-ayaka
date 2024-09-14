@@ -5,6 +5,10 @@ import io.github.qingshu.ayaka.example.annotation.Slf4j
 import io.github.qingshu.ayaka.example.annotation.Slf4j.Companion.log
 import io.github.qingshu.ayaka.plugin.BotPlugin
 import io.github.qingshu.ayaka.utils.MsgUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import meteordevelopment.orbit.EventHandler
 import org.springframework.stereotype.Component
 import java.io.ByteArrayOutputStream
@@ -21,11 +25,12 @@ import javax.imageio.ImageIO
  */
 @Slf4j
 @Component
-class TestImg: BotPlugin {
+class TestImg(
+    private val coroutineScope: CoroutineScope,
+) : BotPlugin {
 
     @EventHandler
     fun handler(e: AnyMessageEvent) {
-        val bot = e.bot!!
         val rawMsg = e.rawMessage ?: ""
         if(rawMsg.isEmpty() || rawMsg != "test") return
         val imgUrls = arrayOf(
@@ -36,15 +41,22 @@ class TestImg: BotPlugin {
 
         val msgBuilder = MsgUtils.builder()
 
-        imgUrls.forEach {
-            val b64Img = imgUrl2B64(it)
-            msgBuilder.img("base64://$b64Img")
+        coroutineScope.launch {
+            val bot = e.bot!!
+
+            imgUrls.forEach {
+                withContext(Dispatchers.IO) {
+                    val b64Img = imgUrl2B64(it)
+                    msgBuilder.img("base64://$b64Img")
+                }
+            }
+            val echo = bot.sendMsg(e, msgBuilder.build())
+            log.info("{}", echo)
         }
-        val echo = bot.sendMsg(e, msgBuilder.build())
-        log.info("{}", echo)
+
     }
 
-    fun imgUrl2B64(url: String): String {
+    private fun imgUrl2B64(url: String): String {
         val imgUrl = URI(url).toURL()
         val image = ImageIO.read(imgUrl)
 

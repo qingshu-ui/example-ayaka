@@ -20,17 +20,11 @@ import org.springframework.stereotype.Component
 @Component
 class LoggerAspect {
 
-    @Pointcut("execution(* io.github.qingshu.ayaka.example.plugin..*(..)) && this(io.github.qingshu.ayaka.plugin.BotPlugin)")
+    @Pointcut("@annotation(meteordevelopment.orbit.EventHandler)")
     fun pluginCall() {
     }
 
-    @Pointcut("execution(* io.github.qingshu.ayaka.example.function..*.apply(..))")
-    fun functionCall(){}
-
-    @Pointcut("execution(* io.github.qingshu.ayaka.example.controller..*.*(..))")
-    fun controller(){}
-
-    @Around("functionCall() || pluginCall() || controller()")
+    @Around("pluginCall()")
     fun applyMethodInFunction(joinPoint: ProceedingJoinPoint): Any {
         val className = joinPoint.signature.declaringType.simpleName
         val methodName = joinPoint.signature.name

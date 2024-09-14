@@ -1,4 +1,4 @@
-package io.github.qingshu.ayaka.example.controller
+package io.github.qingshu.ayaka.example.exception
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartException
  * See the LICENSE file for details.
  */
 @ControllerAdvice
-class GlobalExceptionHandler {
+class EAGlobalExceptionHandler {
 
     @ExceptionHandler(MultipartException::class)
     fun handleMultipartException(ex: MultipartException): ResponseEntity<Map<String, Any>> {

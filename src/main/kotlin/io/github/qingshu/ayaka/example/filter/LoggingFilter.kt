@@ -22,7 +22,7 @@ class LoggingFilter : Filter {
         val req = p0 as HttpServletRequest
         var visitIp = req.remoteAddr
         visitIp = if ("0:0:0:0:0:0:0:1" == visitIp) "127.0.0.1" else visitIp
-        log.info("Request from: $visitIp")
+        // log.info("Request from: $visitIp")
         p2?.doFilter(p0, p1)
     }
 

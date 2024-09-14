@@ -11,7 +11,6 @@ import io.github.qingshu.ayaka.example.service.QwenService
 import io.github.qingshu.ayaka.example.yolo.YOLO
 import io.github.qingshu.ayaka.plugin.BotPlugin
 import io.github.qingshu.ayaka.utils.MsgUtils
-import meteordevelopment.orbit.EventHandler
 import org.springframework.ai.model.function.FunctionCallbackWrapper
 import org.springframework.ai.openai.OpenAiChatOptions
 import org.springframework.beans.factory.annotation.Autowired
@@ -34,9 +33,8 @@ class QwenAiChat @Autowired constructor(
     private val sliderModel: YOLO
 ) : BotPlugin {
 
-
-    @EventHandler()
-    fun onPrivateMessage(event: PrivateMessageEvent) {
+    // @EventHandler
+    fun handler(event: PrivateMessageEvent) {
         val bot = event.bot
         val msg = event.rawMessage
         val userId = event.userId
@@ -47,8 +45,8 @@ class QwenAiChat @Autowired constructor(
         }
     }
 
-    @EventHandler()
-    fun onGroupMessage(event: GroupMessageEvent) {
+    // @EventHandler()
+    fun handler(event: GroupMessageEvent) {
         val bot = event.bot
         val msg = event.rawMessage
         val msgId = event.messageId

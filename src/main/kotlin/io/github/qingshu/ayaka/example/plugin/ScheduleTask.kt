@@ -2,9 +2,10 @@ package io.github.qingshu.ayaka.example.plugin
 
 import io.github.qingshu.ayaka.bot.BotContainer
 import io.github.qingshu.ayaka.dto.event.message.PrivateMessageEvent
+import io.github.qingshu.ayaka.example.annotation.Slf4j
+import io.github.qingshu.ayaka.example.annotation.Slf4j.Companion.log
 import io.github.qingshu.ayaka.plugin.BotPlugin
 import meteordevelopment.orbit.EventHandler
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Component
  * This project is licensed under the GPL-3.0 License.
  * See the LICENSE file for details.
  */
+@Slf4j
 @Component
 class ScheduleTask : BotPlugin {
 
@@ -23,7 +25,7 @@ class ScheduleTask : BotPlugin {
     lateinit var botContainer: BotContainer
 
     @EventHandler
-    fun onPrivate(event: PrivateMessageEvent) {
+    fun handler(event: PrivateMessageEvent) {
         val bot = event.bot!!
         val msg = event.rawMessage
         if (msg == "like") {
@@ -43,7 +45,7 @@ class ScheduleTask : BotPlugin {
         }
     }
 
-    @Scheduled(cron = "10 0 0 * * ?")
+    // @Scheduled(cron = "10 0 0 * * ?")
     fun groupSign() {
         val groupList = listOf(
             244427991L, 335783090L, 737472779L
@@ -57,10 +59,5 @@ class ScheduleTask : BotPlugin {
                 log.info("Daily sign: {}", rel)
             }
         }
-    }
-
-
-    companion object {
-        private val log = LoggerFactory.getLogger(ScheduleTask::class.java)
     }
 }

@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component
 @Component
 class RequestHandle : BotPlugin {
 
-    @EventHandler
+    //@EventHandler
     fun onFriendRequest(event: FriendAddRequestEvent) {
         val bot = event.bot!!
         val flag = event.flag
@@ -32,7 +32,7 @@ class RequestHandle : BotPlugin {
         }
     }
 
-    @EventHandler
+    //@EventHandler
     fun onPrivateMessage(event: PrivateMessageEvent) {
         val bot = event.bot!!
         val msg = event.rawMessage
@@ -49,7 +49,7 @@ class RequestHandle : BotPlugin {
         }
     }
 
-    @EventHandler
+    //@EventHandler
     fun onGroupAddRequest(event: GroupAddRequestEvent) {
         val bot = event.bot!!
         val flag = event.flag!!
