@@ -6,9 +6,7 @@ import io.github.qingshu.ayaka.dto.event.message.PrivateMessageEvent
 import io.github.qingshu.ayaka.example.annotation.Slf4j
 import io.github.qingshu.ayaka.example.annotation.Slf4j.Companion.log
 import io.github.qingshu.ayaka.example.function.ScheduleTaskFunction
-import io.github.qingshu.ayaka.example.function.ShowImageFunction
 import io.github.qingshu.ayaka.example.service.QwenService
-import io.github.qingshu.ayaka.example.yolo.YOLO
 import io.github.qingshu.ayaka.plugin.BotPlugin
 import io.github.qingshu.ayaka.utils.MsgUtils
 import org.springframework.ai.model.function.FunctionCallbackWrapper
@@ -30,7 +28,6 @@ import org.springframework.stereotype.Component
 class QwenAiChat @Autowired constructor(
     private val qwenService: QwenService,
     @Qualifier("ayakaTaskScheduler") private val task: ThreadPoolTaskScheduler,
-    private val sliderModel: YOLO
 ) : BotPlugin {
 
     // @EventHandler
@@ -84,14 +81,6 @@ class QwenAiChat @Autowired constructor(
                         .withName("SetScheduleTask")
                         .withDescription("可以通过这个函数设置定时的任务，比如闹钟，提醒，等等")
                         .build(),
-                    FunctionCallbackWrapper.builder(
-                        ShowImageFunction(event = event)
-                    )
-                        .withName("showImageWithPath")
-                        .withDescription(
-                            "将传入的图片路径或者网络地址展示出来"
-                        )
-                        .build()
                 )
             )
             .withFunction("detectObjectInImage")
