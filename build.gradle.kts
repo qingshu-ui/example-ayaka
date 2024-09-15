@@ -37,10 +37,6 @@ repositories {
 }
 
 dependencies {
-    // onnx and opencv
-    implementation("ai.djl.opencv:opencv:0.29.0")
-    implementation("com.microsoft.onnxruntime:onnxruntime:1.19.0")
-
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation ("io.github.qingshu-ui:ayaka-spring-boot-starter:0.0.9-SNAPSHOT")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
@@ -48,7 +44,6 @@ dependencies {
     // spring
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation ("org.springframework.boot:spring-boot-starter-aop")
-    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
