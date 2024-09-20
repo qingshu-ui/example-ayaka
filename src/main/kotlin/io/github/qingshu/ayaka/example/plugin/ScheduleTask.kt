@@ -44,20 +44,4 @@ class ScheduleTask : BotPlugin {
             log.info("Daily like: {}", result)
         }
     }
-
-    // @Scheduled(cron = "10 0 0 * * ?")
-    fun groupSign() {
-        val groupList = listOf(
-            244427991L, 335783090L, 737472779L
-        )
-        val userId = 1718692748L
-        botContainer.bots.forEach { it ->
-            val bot = it.value
-            groupList.forEach {
-                val rel = bot.sendGroupSign(it)
-                bot.sendPrivateMsg(userId, "$it group sign: ${rel.status}", false)
-                log.info("Daily sign: {}", rel)
-            }
-        }
-    }
 }

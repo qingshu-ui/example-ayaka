@@ -38,7 +38,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation ("io.github.qingshu-ui:ayaka-spring-boot-starter:0.0.9-SNAPSHOT")
+    implementation ("io.github.qingshu-ui:ayaka-spring-boot-starter:1.0.0-SNAPSHOT")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     // spring

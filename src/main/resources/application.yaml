@@ -16,22 +16,11 @@ spring:
 
 # ayaka setup
 ayaka:
-  task:
-    thread-name-prefix: ayaka-async-task
   plugin:
-    plugin-package: io.github.qingshu.ayaka.example
-  slider:
-    enable: true
+    plugin-packages:
+      - io.github.qingshu.ayaka.example
   http:
     enable: true
     api-port: 5800
     endpoint: /ayaka
     secret: U1FfRzMxQkVvRjBBZ0g5N25tS3Z1YlR3T1NTd0xHNk0=
-
-# log setup
-logging:
-  level:
-    root: INFO
-    io.github.qingshu.ayaka.example: DEBUG
-  file:
-    name: logs/run.log

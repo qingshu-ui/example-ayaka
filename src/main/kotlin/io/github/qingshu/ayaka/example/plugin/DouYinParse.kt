@@ -4,13 +4,13 @@ import com.alibaba.fastjson2.JSON
 import io.github.qingshu.ayaka.dto.event.message.AnyMessageEvent
 import io.github.qingshu.ayaka.example.annotation.Slf4j
 import io.github.qingshu.ayaka.example.annotation.Slf4j.Companion.log
-import io.github.qingshu.ayaka.example.constant.Regex
 import io.github.qingshu.ayaka.example.dto.DouYinParseDTO
 import io.github.qingshu.ayaka.example.utils.NetUtils
 import io.github.qingshu.ayaka.example.utils.RegexUtils
 import io.github.qingshu.ayaka.plugin.BotPlugin
 import io.github.qingshu.ayaka.utils.MsgUtils
 import org.springframework.stereotype.Component
+import io.github.qingshu.ayaka.example.utils.Regex
 
 /**
  * Copyright (c) 2024 qingshu.

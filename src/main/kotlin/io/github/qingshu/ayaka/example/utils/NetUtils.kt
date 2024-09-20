@@ -5,6 +5,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import org.springframework.web.client.HttpStatusCodeException
+import java.io.ByteArrayInputStream
+import java.io.File
+import java.util.concurrent.TimeUnit
 
 /**
  * Copyright (c) 2024 qingshu.
@@ -35,5 +39,20 @@ object NetUtils {
     fun post(url: String, json: String): Response {
         val req = Request.Builder().url(url).post(json.toRequestBody(mediaType))
         return client.newCall(req.build()).execute()
+    }
+
+    fun download(url: String, path: String, name: String, timeout: Int): String {
+        File(path).let { if (!it.exists()) it.mkdirs() }
+        val req = Request.Builder().url(url).build()
+        val resp = client.newBuilder().readTimeout(timeout.toLong(), TimeUnit.SECONDS).build().newCall(req).execute()
+        resp.code.let { if (it != 200) throw Exception("Can't download $name") }
+        val inputStream = resp.body?.byteStream()
+        val file = File(path, name)
+        inputStream?.use { input ->
+            file.outputStream().use { output ->
+                input.copyTo(output)
+            }
+        }
+        return file.absolutePath
     }
 }
