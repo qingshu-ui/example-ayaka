@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit
  * Copyright (c) 2024 qingshu.
  * This file is part of the example-ayaka project.
  *
- * This project is licensed under the GPL-3.0 License.
+ * This project is licensed under the AGPL-3.0 License.
  * See the LICENSE file for details.
  */
 object NetUtils {

@@ -19,10 +19,10 @@ import java.nio.file.WatchEvent
 import kotlin.system.exitProcess
 
 /**
- * Copyright (c) 2024 qingshu.
- * This file is part of the example-ayaka project.
+ * Copyright (c) 2024 https://github.com/MisakaTAT/Yuri-Kotlin.
+ * This file is part of the https://github.com/MisakaTAT/Yuri-Kotlin project.
  *
- * This project is licensed under the GPL-3.0 License.
+ * This file is licensed under the AGPL-3.0 License.
  * See the LICENSE file for details.
  */
 @Slf4j
