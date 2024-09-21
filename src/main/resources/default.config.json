@@ -1,0 +1,13 @@
+{
+  "base": {
+    "nickName": "情书",
+    "adminList": [
+      1718692748
+    ]
+  },
+  "plugins": {
+    "driftBottle": {
+      "cd": 15
+    }
+  }
+}

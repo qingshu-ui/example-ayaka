@@ -1,10 +1,6 @@
 spring:
   application:
     name: example-ayaka
-  servlet:
-    multipart:
-      max-file-size: 5MB
-      max-request-size: 5MB
   ai:
     openai:
       chat:
@@ -13,6 +9,12 @@ spring:
         base-url: https://dashscope.aliyuncs.com/compatible-mode
         options:
           model: qwen-max
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    open-in-view: false
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
 
 # ayaka setup
 ayaka:

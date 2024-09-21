@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "1.9.24"
     kotlin("plugin.spring") version "1.9.24"
     kotlin("kapt") version "1.9.24"
+    kotlin("plugin.jpa") version "1.9.24"
     id("org.springframework.boot") version "3.3.2"
     id("io.spring.dependency-management") version "1.1.6"
 }
@@ -34,6 +35,7 @@ repositories {
     }
     maven { url = uri("https://maven.meteordev.org/releases") }
     maven { url = uri("https://repo.spring.io/milestone") }
+    maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
@@ -46,7 +48,14 @@ dependencies {
     implementation ("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.ai:spring-ai-openai-spring-boot-starter")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    implementation("org.xerial:sqlite-jdbc:3.45.2.0")
+    implementation("org.hibernate.orm:hibernate-community-dialects:6.4.4.Final")
     kapt("org.springframework.boot:spring-boot-configuration-processor")
+    implementation("com.github.dromara.hutool:hutool-core:5.8.29")
+    implementation("com.github.dromara.hutool:hutool-system:5.8.29")
+    implementation("net.jodah:expiringmap:0.5.10")
 
     // test
     testImplementation("org.springframework.boot:spring-boot-starter-test")

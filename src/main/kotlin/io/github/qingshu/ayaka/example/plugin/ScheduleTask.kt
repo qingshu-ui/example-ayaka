@@ -1,10 +1,13 @@
 package io.github.qingshu.ayaka.example.plugin
 
+import io.github.qingshu.ayaka.annotation.MessageHandlerFilter
 import io.github.qingshu.ayaka.bot.BotContainer
+import io.github.qingshu.ayaka.dto.event.message.GroupMessageEvent
 import io.github.qingshu.ayaka.dto.event.message.PrivateMessageEvent
 import io.github.qingshu.ayaka.example.annotation.Slf4j
 import io.github.qingshu.ayaka.example.annotation.Slf4j.Companion.log
 import io.github.qingshu.ayaka.plugin.BotPlugin
+import io.github.qingshu.ayaka.utils.MsgUtils
 import meteordevelopment.orbit.EventHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
@@ -25,13 +28,24 @@ class ScheduleTask : BotPlugin {
     lateinit var botContainer: BotContainer
 
     @EventHandler
+    @MessageHandlerFilter(cmd = "like")
     fun handler(event: PrivateMessageEvent) {
         val bot = event.bot!!
-        val msg = event.rawMessage
-        if (msg == "like") {
-            val result = bot.sendLike(event.userId!!)
-            log.info("Action like done: {}", result)
-        }
+        val userId = event.userId!!
+        bot.sendPrivateMsg(
+            userId = userId,
+            msg = MsgUtils.builder().reply(event.messageId!!).text("欧克呀，宝").build()
+        )
+        val result = bot.sendLike(userId)
+        log.info("Action like done: {}", result)
+    }
+
+    @EventHandler
+    @MessageHandlerFilter(cmd = "sign")
+    fun handler(event: GroupMessageEvent) {
+        val bot = event.bot!!
+        val echo = bot.sendGroupSign(event.groupId!!)
+        log.info("Action sign done: {}", echo)
     }
 
     @Scheduled(cron = "5 0 0 * * ?")

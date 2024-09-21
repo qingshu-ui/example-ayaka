@@ -44,3 +44,5 @@ slider-model.yaml
 model
 detection
 src/test
+ayaka.sqlite.db
+config.json
