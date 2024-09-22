@@ -1,6 +1,5 @@
 package io.github.qingshu.ayaka.example.plugin
 
-import com.alibaba.fastjson2.JSON
 import io.github.qingshu.ayaka.annotation.MessageHandlerFilter
 import io.github.qingshu.ayaka.dto.constant.AtEnum
 import io.github.qingshu.ayaka.dto.event.message.AnyMessageEvent
@@ -12,6 +11,7 @@ import io.github.qingshu.ayaka.example.utils.Regex
 import io.github.qingshu.ayaka.example.utils.RegexUtils
 import io.github.qingshu.ayaka.plugin.BotPlugin
 import io.github.qingshu.ayaka.utils.MsgUtils
+import io.github.qingshu.ayaka.utils.mapper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import meteordevelopment.orbit.EventHandler
@@ -40,8 +40,8 @@ class DouYinParse(
         }
 
         return NetUtils.get("http://117.72.12.207/api/douyin/web/fetch_one_video?aweme_id=$videoId").use { resp ->
-            val data = JSON.parseObject(resp.body?.string())
-            JSON.parseObject(data["data"].toString(), DouYinParseDTO::class.java) ?: throw Exception("DouYin parse failed")
+            val data = mapper.readTree(resp.body?.string())
+            mapper.readValue(data["data"].asText(), DouYinParseDTO::class.java) ?: throw Exception("DouYin parse failed")
         }.detail
     }
 
@@ -49,15 +49,15 @@ class DouYinParse(
     @MessageHandlerFilter(at = AtEnum.NEED)
     fun handler(event: AnyMessageEvent) {
         try {
-            if (!RegexUtils.check(event.message ?: "", Regex.DOU_YIN_SHORT_URL)) return
-            val bot = event.bot!!
-            val messageId = event.messageId!!
+            if (!RegexUtils.check(event.message, Regex.DOU_YIN_SHORT_URL)) return
+            val bot = event.bot
+            val messageId = event.messageId
             bot.sendMsg(
                 event = event,
                 msg = MsgUtils.builder().reply(messageId).text("好的，宝子").build(),
             )
             coroutine.launch {
-                val data = request(event.message!!)
+                val data = request(event.message)
                 val msg = MsgUtils.builder()
                     .video(data.video.play.urls[0], data.video.cover.urls[0])
                     .build()

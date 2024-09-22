@@ -51,12 +51,12 @@ class DriftBottle(
     fun handler(event: GroupMessageEvent) {
         PluginExceptionHandler.with(event) {
             val matcher = event.matcher!!
-            val bot = event.bot!!
-            val msg = event.message!!
-            val groupId = event.groupId!!
-            val userId = event.userId!!
-            val groupName = bot.getGroupInfo(groupId, false).data?.groupName ?: ""
-            val userName = bot.getGroupMemberInfo(groupId, userId, false).data?.nickname ?: ""
+            val bot = event.bot
+            val msg = event.message
+            val groupId = event.groupId
+            val userId = event.userId
+            val groupName = bot.getGroupInfo(groupId, false).data.groupName
+            val userName = bot.getGroupMemberInfo(groupId, userId, false).data.nickname
 
             if (msg.startsWith("丢漂流瓶")) {
                 val content = matcher.group(1).trim()

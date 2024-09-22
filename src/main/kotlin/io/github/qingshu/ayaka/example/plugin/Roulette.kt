@@ -212,11 +212,11 @@ class Roulette : BotPlugin {
     @MessageHandlerFilter(cmd = Regex.ROULETTE)
     fun handler(event: GroupMessageEvent) {
         val matcher = event.matcher!!
-        val bot = event.bot!!
-        val groupId = event.groupId!!
-        val userId = event.userId!!
-        val userRole = bot.getGroupMemberInfo(groupId, userId, true).data?.role ?: ""
-        val botRole = bot.getGroupMemberInfo(groupId, event.selfId!!, true).data?.role ?: ""
+        val bot = event.bot
+        val groupId = event.groupId
+        val userId = event.userId
+        val userRole = bot.getGroupMemberInfo(groupId, userId, true).data.role
+        val botRole = bot.getGroupMemberInfo(groupId, event.selfId, true).data.role
         when (matcher.group(0)) {
             "切换轮盘模式" -> changeMode(groupId, userId, userRole, bot)
             "开枪" -> shot(groupId, userId, userRole, botRole, bot)

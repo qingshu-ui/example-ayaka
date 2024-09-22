@@ -3,9 +3,9 @@ package io.github.qingshu.ayaka.example.config
 import cn.hutool.core.io.watch.SimpleWatcher
 import cn.hutool.core.io.watch.WatchMonitor
 import cn.hutool.core.io.watch.watchers.DelayWatcher
-import com.alibaba.fastjson2.JSON
 import io.github.qingshu.ayaka.example.annotation.Slf4j
 import io.github.qingshu.ayaka.example.annotation.Slf4j.Companion.log
+import io.github.qingshu.ayaka.utils.mapper
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.boot.ExitCodeGenerator
 import org.springframework.boot.SpringApplication
@@ -53,7 +53,7 @@ class EAConfig(
     private fun init() {
         try {
             val defaultConfigFile = javaClass.classLoader.getResourceAsStream(defaultConfigFileName)
-            val configFile = File(configFileName).apply {
+            File(configFileName).apply {
                 if (!exists()) {
                     log.error("Config file $configFileName not found, creating default config from $defaultConfigFileName")
                     outputStream().use {
@@ -68,7 +68,7 @@ class EAConfig(
             log.error("The config file create failed", e)
         }
         Files.newBufferedReader(Paths.get(configFileName)).use { reader ->
-            val config: ConfigModel = JSON.parseObject(reader, ConfigModel::class.java)
+            val config: ConfigModel = mapper.readValue(reader, ConfigModel::class.java)
             base = config.base
             plugins = config.plugins
             if (!isReload) log.info("The config file has been initialized")

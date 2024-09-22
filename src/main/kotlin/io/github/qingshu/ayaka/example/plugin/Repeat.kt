@@ -42,10 +42,10 @@ class Repeat: BotPlugin {
 
     @EventHandler
     fun handler(event: GroupMessageEvent){
-        val bot = event.bot!!
-        val msg = event.message ?: return
-        val groupId = event.groupId!!
-        val userId = event.userId!!
+        val bot = event.bot
+        val msg = event.message
+        val groupId = event.groupId
+        val userId = event.userId
 
         val cache = expiringMap[groupId]
         if(cache != null && msg == cache) return

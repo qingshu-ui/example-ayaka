@@ -1,5 +1,7 @@
 package io.github.qingshu.ayaka.example.config
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 /**
  * This file is part of the Yuri-Kotlin project:
  * https://github.com/MisakaTAT/Yuri-Kotlin
@@ -16,31 +18,31 @@ package io.github.qingshu.ayaka.example.config
  * This file is licensed under the same APGL-3.0 License.
  */
 data class ConfigModel(
-    val base: Base,
-    val plugins: Plugins,
+    @JsonProperty("base") val base: Base,
+    @JsonProperty("plugins") val plugins: Plugins,
 ) {
     data class Base(
-        val adminList: List<Long>,
-        val nickName: String,
+        @JsonProperty("adminList") val adminList: List<Long>,
+        @JsonProperty("nickName") val nickName: String,
     )
 
     data class Plugins(
-        val driftBottle: DriftBottle,
-        val repeat: Repeat,
-        val roulette: Roulette,
+        @JsonProperty("driftBottle") val driftBottle: DriftBottle,
+        @JsonProperty("repeat") val repeat: Repeat,
+        @JsonProperty("roulette") val roulette: Roulette,
     ) {
         data class DriftBottle(
-            val cd: Int,
+            @JsonProperty("cd") val cd: Int,
         )
 
         data class Repeat(
-            val waitTime: Int,
-            val thresholdValue: Int,
+            @JsonProperty("waitTime") val waitTime: Int,
+            @JsonProperty("thresholdValue") val thresholdValue: Int,
         )
 
         data class Roulette(
-            val timeout: Int,
-            val maxMuteTime: Int,
+            @JsonProperty("timeout") val timeout: Int,
+            @JsonProperty("maxMuteTime") val maxMuteTime: Int,
         )
     }
 }

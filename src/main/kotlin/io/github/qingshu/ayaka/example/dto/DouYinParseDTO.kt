@@ -1,6 +1,6 @@
 package io.github.qingshu.ayaka.example.dto
 
-import com.alibaba.fastjson2.annotation.JSONField
+import com.fasterxml.jackson.annotation.JsonProperty
 
 /**
  * This file is part of the Yuri-Kotlin project:
@@ -18,7 +18,7 @@ import com.alibaba.fastjson2.annotation.JSONField
  * This file is licensed under the same APGL-3.0 License.
  */
 data class DouYinParseDTO(
-    @JSONField(name = "aweme_detail")
+    @JsonProperty("aweme_detail")
     val detail: Detail,
 ) {
     data class Detail(
@@ -26,16 +26,16 @@ data class DouYinParseDTO(
         val video: Video,
     ){
         data class Video(
-            @JSONField(name = "play_addr")
+            @JsonProperty("play_addr")
             val play: Play,
             val cover: Cover,
         ){
             data class Play(
-                @JSONField(name = "url_list")
+                @JsonProperty("url_list")
                 val urls: List<String>,
             )
             data class Cover(
-                @JSONField(name = "url_list")
+                @JsonProperty("url_list")
                 val urls: List<String>,
             )
         }

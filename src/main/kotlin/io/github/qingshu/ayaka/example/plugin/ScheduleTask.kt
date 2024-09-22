@@ -30,11 +30,11 @@ class ScheduleTask : BotPlugin {
     @EventHandler
     @MessageHandlerFilter(cmd = "like")
     fun handler(event: PrivateMessageEvent) {
-        val bot = event.bot!!
-        val userId = event.userId!!
+        val bot = event.bot
+        val userId = event.userId
         bot.sendPrivateMsg(
             userId = userId,
-            msg = MsgUtils.builder().reply(event.messageId!!).text("欧克呀，宝").build()
+            msg = MsgUtils.builder().reply(event.messageId).text("欧克呀，宝").build()
         )
         val result = bot.sendLike(userId)
         log.info("Action like done: {}", result)
@@ -43,8 +43,8 @@ class ScheduleTask : BotPlugin {
     @EventHandler
     @MessageHandlerFilter(cmd = "sign")
     fun handler(event: GroupMessageEvent) {
-        val bot = event.bot!!
-        val echo = bot.sendGroupSign(event.groupId!!)
+        val bot = event.bot
+        val echo = bot.sendGroupSign(event.groupId)
         log.info("Action sign done: {}", echo)
     }
 
