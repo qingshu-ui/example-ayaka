@@ -8,6 +8,14 @@
   "plugins": {
     "driftBottle": {
       "cd": 15
+    },
+    "repeat": {
+      "waitTime": 60,
+      "thresholdValue": 5
+    },
+    "roulette": {
+      "timeout": 60,
+      "maxMuteTime": 5
     }
   }
 }

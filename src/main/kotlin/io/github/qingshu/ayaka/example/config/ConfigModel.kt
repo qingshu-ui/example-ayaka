@@ -26,9 +26,21 @@ data class ConfigModel(
 
     data class Plugins(
         val driftBottle: DriftBottle,
+        val repeat: Repeat,
+        val roulette: Roulette,
     ) {
         data class DriftBottle(
             val cd: Int,
+        )
+
+        data class Repeat(
+            val waitTime: Int,
+            val thresholdValue: Int,
+        )
+
+        data class Roulette(
+            val timeout: Int,
+            val maxMuteTime: Int,
         )
     }
 }
