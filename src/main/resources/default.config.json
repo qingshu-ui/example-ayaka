@@ -16,6 +16,9 @@
     "roulette": {
       "timeout": 60,
       "maxMuteTime": 5
+    },
+    "randomVideo": {
+      "path": ""
     }
   }
 }

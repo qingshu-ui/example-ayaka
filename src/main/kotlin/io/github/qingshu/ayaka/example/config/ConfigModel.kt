@@ -30,6 +30,7 @@ data class ConfigModel(
         @JsonProperty("driftBottle") val driftBottle: DriftBottle,
         @JsonProperty("repeat") val repeat: Repeat,
         @JsonProperty("roulette") val roulette: Roulette,
+        @JsonProperty("randomVideo") val randomVideo: RandomVideo
     ) {
         data class DriftBottle(
             @JsonProperty("cd") val cd: Int,
@@ -43,6 +44,10 @@ data class ConfigModel(
         data class Roulette(
             @JsonProperty("timeout") val timeout: Int,
             @JsonProperty("maxMuteTime") val maxMuteTime: Int,
+        )
+
+        data class RandomVideo(
+            @JsonProperty("path") val path: String,
         )
     }
 }
