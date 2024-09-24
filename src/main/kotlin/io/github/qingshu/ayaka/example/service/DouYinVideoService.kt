@@ -20,4 +20,6 @@ interface DouYinVideoService {
     fun count(): Long
 
     fun requiredUpdateInfo(count: Int): List<DouYinVideoEntity>
+
+    fun allUnUpdatedCount(): Int
 }

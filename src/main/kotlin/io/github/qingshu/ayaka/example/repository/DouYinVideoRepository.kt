@@ -30,6 +30,8 @@ interface DouYinVideoRepository : JpaRepository<DouYinVideoEntity, Int> {
 
     fun findByTagsAndDescription(tags: String = "", descriptions: String = "", pageable: Pageable): List<DouYinVideoEntity>
 
+    fun countByTagsAndDescription(tags: String = "", descriptions: String = ""): Int
+
     @Transactional
     override fun <S : DouYinVideoEntity> save(entity: S): S {
         TODO("Not yet implemented")

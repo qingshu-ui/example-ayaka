@@ -2,10 +2,13 @@ package io.github.qingshu.ayaka.example.plugin
 
 import io.github.qingshu.ayaka.annotation.MessageHandlerFilter
 import io.github.qingshu.ayaka.bot.BotContainer
+import io.github.qingshu.ayaka.bot.BotFactory
+import io.github.qingshu.ayaka.bot.BotSessionFactory
 import io.github.qingshu.ayaka.dto.event.message.GroupMessageEvent
 import io.github.qingshu.ayaka.dto.event.message.PrivateMessageEvent
 import io.github.qingshu.ayaka.example.annotation.Slf4j
 import io.github.qingshu.ayaka.example.annotation.Slf4j.Companion.log
+import io.github.qingshu.ayaka.example.config.EAConfig
 import io.github.qingshu.ayaka.plugin.BotPlugin
 import io.github.qingshu.ayaka.utils.MsgUtils
 import meteordevelopment.orbit.EventHandler
@@ -22,10 +25,10 @@ import org.springframework.stereotype.Component
  */
 @Slf4j
 @Component
-class ScheduleTask : BotPlugin {
-
-    @Autowired
-    lateinit var botContainer: BotContainer
+class ScheduleTask(
+    private val sessionFactory: BotSessionFactory,
+    private val botFactory: BotFactory,
+): BotPlugin {
 
     @EventHandler
     @MessageHandlerFilter(cmd = "like")
@@ -51,11 +54,9 @@ class ScheduleTask : BotPlugin {
     @Scheduled(cron = "5 0 0 * * ?")
     fun friendLike() {
         val userId = 1718692748L
-        botContainer.bots.forEach {
-            val bot = it.value
-            val rel = bot.sendLike(userId)
-            val result = bot.sendPrivateMsg(userId, "点赞：${rel.status}", false)
-            log.info("Daily like: {}", result)
-        }
+        val botSession = sessionFactory.createSession("localhost")
+        val bot = botFactory.createBot(EAConfig.base.selfId, botSession)
+        val rel = bot.sendLike(userId)
+        bot.sendPrivateMsg(userId, "点赞：${rel.status}", false)
     }
 }

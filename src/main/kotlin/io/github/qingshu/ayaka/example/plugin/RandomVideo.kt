@@ -76,19 +76,28 @@ class RandomVideo(
         val baseConfig = EAConfig.base
         val botSession = sessionFactory.createSession("localhost")
         val bot = botFactory.createBot(baseConfig.selfId, botSession)
-        baseConfig.adminList.forEach {
-            bot.sendPrivateMsg(it, "开始更新视频信息")
-        }
         val requiredUpdateVideos = service.requiredUpdateInfo(50)
+        val startTipsMsg = MsgUtils.builder()
+            .text("开始更新视频信息\n\n")
+            .text("本次预计更新 ${requiredUpdateVideos.size} 条数据").build()
+        baseConfig.adminList.forEach {
+            bot.sendPrivateMsg(it, startTipsMsg)
+        }
+        var finish = 0
         requiredUpdateVideos.forEach {
             val (tags, desc) = getTags(it.fileName)
             if (tags.isEmpty() || desc.isEmpty()) return@forEach
             it.tags = tags
             it.description = desc
             service.updateVideoInfo(it)
+            finish++
         }
+        val endTipsMsg = MsgUtils.builder()
+            .text("视频信息更新结束\n\n")
+            .text("本次成功更新 $finish 条数据\n")
+            .text("剩余 ${service.allUnUpdatedCount()} 需要更新").build()
         baseConfig.adminList.forEach {
-            bot.sendPrivateMsg(it, "视频信息更新结束")
+            bot.sendPrivateMsg(it, endTipsMsg)
         }
         log.info("视频信息更新结束")
     }
@@ -142,7 +151,7 @@ class RandomVideo(
     private fun getTags(fileName: String): List<String> {
         return try {
             val id = fileName.split("_")[0]
-            val url = "http://117.72.12.207/api/douyin/web/fetch_one_video?aweme_id=$id"
+            val url = "http://localhost/api/douyin/web/fetch_one_video?aweme_id=$id"
             var jsonNode: ObjectNode
             NetUtils.get(url).use { resp ->
                 jsonNode = mapper.readTree(resp.body?.string() ?: "") as ObjectNode
@@ -232,6 +241,7 @@ class RandomVideo(
             bot.sendMsg(e, videoMessages.first())
             return
         }
+        bot.sendMsg(e, MsgUtils.builder().reply(e.messageId).text("en~，快了，就快粗来了").build())
         val forwardMsg = generateForwardMsg(123, "bot", videoMessages)
         coroutineScope.launch {
             bot.sendForwardMsg(e, forwardMsg)

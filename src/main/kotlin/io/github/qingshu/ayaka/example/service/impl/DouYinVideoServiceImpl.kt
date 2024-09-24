@@ -51,4 +51,8 @@ class DouYinVideoServiceImpl(
         val pageable = PageRequest.of(0, count)
         return repository.findByTagsAndDescription(pageable = pageable)
     }
+
+    override fun allUnUpdatedCount(): Int {
+        return repository.countByTagsAndDescription()
+    }
 }
