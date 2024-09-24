@@ -3,6 +3,7 @@ package io.github.qingshu.ayaka.example.service.impl
 import io.github.qingshu.ayaka.example.entity.DouYinVideoEntity
 import io.github.qingshu.ayaka.example.repository.DouYinVideoRepository
 import io.github.qingshu.ayaka.example.service.DouYinVideoService
+import org.springframework.data.domain.PageRequest
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 
@@ -44,5 +45,10 @@ class DouYinVideoServiceImpl(
             it.usedToday = false
             updateVideoInfo(it)
         }
+    }
+
+    override fun requiredUpdateInfo(count: Int): List<DouYinVideoEntity> {
+        val pageable = PageRequest.of(0, count)
+        return repository.findByTagsAndDescription(pageable = pageable)
     }
 }

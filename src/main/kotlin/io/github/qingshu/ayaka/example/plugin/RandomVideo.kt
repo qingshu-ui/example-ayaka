@@ -3,6 +3,8 @@ package io.github.qingshu.ayaka.example.plugin
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.ObjectNode
 import io.github.qingshu.ayaka.annotation.MessageHandlerFilter
+import io.github.qingshu.ayaka.bot.BotFactory
+import io.github.qingshu.ayaka.bot.BotSessionFactory
 import io.github.qingshu.ayaka.dto.event.message.AnyMessageEvent
 import io.github.qingshu.ayaka.example.annotation.Slf4j
 import io.github.qingshu.ayaka.example.annotation.Slf4j.Companion.log
@@ -18,12 +20,16 @@ import io.github.qingshu.ayaka.utils.mapper
 import jakarta.annotation.PostConstruct
 import kotlinx.coroutines.*
 import meteordevelopment.orbit.EventHandler
+import net.jodah.expiringmap.ExpirationPolicy
+import net.jodah.expiringmap.ExpiringMap
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.io.File
 import java.io.FileWriter
 import java.io.PrintWriter
 import java.security.MessageDigest
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 
@@ -39,6 +45,8 @@ import kotlin.io.path.absolutePathString
 class RandomVideo(
     private val service: DouYinVideoService,
     private val coroutineScope: CoroutineScope,
+    private val botFactory: BotFactory,
+    private val sessionFactory: BotSessionFactory
 ) : BotPlugin {
     /**
      * 这个插件要做些什么？
@@ -51,11 +59,38 @@ class RandomVideo(
 
     private val config = EAConfig.plugins.randomVideo
     private val failedFileNames = Collections.synchronizedList(mutableListOf<String>())
+    private val expiringMap: ExpiringMap<Long, Long> = ExpiringMap.builder()
+        .variableExpiration()
+        .expirationPolicy(ExpirationPolicy.CREATED)
+        .build()
 
     @PostConstruct
     fun initData() {
         if (0L != service.count()) return
         extractVideoInfoFromDirectory(config.path)
+    }
+
+    @Scheduled(cron = "0 0 */2 * * ?")
+    fun updateVideoInfo() {
+        log.info("开始更新视频信息")
+        val baseConfig = EAConfig.base
+        val botSession = sessionFactory.createSession("localhost")
+        val bot = botFactory.createBot(baseConfig.selfId, botSession)
+        baseConfig.adminList.forEach {
+            bot.sendPrivateMsg(it, "开始更新视频信息")
+        }
+        val requiredUpdateVideos = service.requiredUpdateInfo(50)
+        requiredUpdateVideos.forEach {
+            val (tags, desc) = getTags(it.fileName)
+            if (tags.isEmpty() || desc.isEmpty()) return@forEach
+            it.tags = tags
+            it.description = desc
+            service.updateVideoInfo(it)
+        }
+        baseConfig.adminList.forEach {
+            bot.sendPrivateMsg(it, "视频信息更新结束")
+        }
+        log.info("视频信息更新结束")
     }
 
     private fun extractVideoInfoFromDirectory(path: String) {
@@ -73,7 +108,7 @@ class RandomVideo(
                     val fileName = videoFile.name
                     val fileSize = videoFile.length()
                     val md5 = calculateMD5(videoFile)
-                    val (tags, desc) = getTags(videoFile.name)
+                    val (tags, desc) = "" to ""
 
                     val videoEntity = DouYinVideoEntity(
                         id = 0,
@@ -165,29 +200,39 @@ class RandomVideo(
         val matcher = e.matcher ?: return
         val count = matcher.group(2)?.trim()?.toIntOrNull()?.coerceIn(1, 9) ?: 1
         val bot = e.bot
+        val groupId = e.groupId
+        val userId = e.userId
+
+        val id = if (groupId != 0L) groupId else userId
+        expiringMap[id]?.let {
+            if (it == userId) {
+                val expectedExpiration = expiringMap.getExpectedExpiration(id) / 1000
+                bot.sendMsg(
+                    e, MsgUtils.builder()
+                        .reply(e.messageId)
+                        .text("呜～ 还请不要太快，だめ··· 冷却：[${expectedExpiration}秒]")
+                        .build()
+                )
+                return
+            }
+        }
+        expiringMap.put(id, userId, config.cd.toLong(), TimeUnit.SECONDS)
 
         val result = service.getRandomUnusedVideo(count)
-        val msgBuilder = MsgUtils.builder()
         if (result.isEmpty()) {
-            bot.sendMsg(e, msgBuilder.at(e.userId).text("已经被榨干了，没有了").build())
+            bot.sendMsg(e, MsgUtils.builder().at(e.userId).text("已经被榨干了，一滴都没有了").build())
             return
         }
-        if (result.size == 1) {
-            bot.sendMsg(
-                e,
-                msgBuilder
-                    .video("file://${Path(config.path, result[0].fileName).absolutePathString()}", "")
-                    .build()
-            )
+        val videoMessages = result.map {
+            MsgUtils.builder()
+                .video("file://${Path(config.path, it.fileName).absolutePathString()}", "")
+                .build()
+        }
+        if (videoMessages.size == 1) {
+            bot.sendMsg(e, videoMessages.first())
             return
         }
-        val msgList = mutableListOf<String>()
-        result.forEach {
-            val builder = MsgUtils.builder()
-            msgList.add(builder.video("file://${Path(config.path, it.fileName).absolutePathString()}", "").build())
-        }
-
-        val forwardMsg = generateForwardMsg(123, "bot", msgList)
+        val forwardMsg = generateForwardMsg(123, "bot", videoMessages)
         coroutineScope.launch {
             bot.sendForwardMsg(e, forwardMsg)
         }

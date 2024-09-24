@@ -1,6 +1,7 @@
 package io.github.qingshu.ayaka.example.repository
 
 import io.github.qingshu.ayaka.example.entity.DouYinVideoEntity
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -26,6 +27,8 @@ interface DouYinVideoRepository : JpaRepository<DouYinVideoEntity, Int> {
     fun findRandomUnusedVideo(@Param("count") count: Int): List<DouYinVideoEntity>
 
     fun findByUsedTodayIsTrue(): List<DouYinVideoEntity>
+
+    fun findByTagsAndDescription(tags: String = "", descriptions: String = "", pageable: Pageable): List<DouYinVideoEntity>
 
     @Transactional
     override fun <S : DouYinVideoEntity> save(entity: S): S {

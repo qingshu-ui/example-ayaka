@@ -18,4 +18,6 @@ interface DouYinVideoService {
     fun updateVideoInfo(videoInfo: DouYinVideoEntity)
 
     fun count(): Long
+
+    fun requiredUpdateInfo(count: Int): List<DouYinVideoEntity>
 }

@@ -3,7 +3,8 @@
     "nickName": "情书",
     "adminList": [
       1718692748
-    ]
+    ],
+    "selfId": 222333
   },
   "plugins": {
     "driftBottle": {
@@ -18,7 +19,8 @@
       "maxMuteTime": 5
     },
     "randomVideo": {
-      "path": ""
+      "path": "",
+      "cd": 30
     }
   }
 }

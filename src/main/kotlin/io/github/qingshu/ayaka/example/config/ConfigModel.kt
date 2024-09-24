@@ -24,6 +24,7 @@ data class ConfigModel(
     data class Base(
         @JsonProperty("adminList") val adminList: List<Long>,
         @JsonProperty("nickName") val nickName: String,
+        @JsonProperty("selfId") val selfId: Long,
     )
 
     data class Plugins(
@@ -48,6 +49,7 @@ data class ConfigModel(
 
         data class RandomVideo(
             @JsonProperty("path") val path: String,
+            @JsonProperty("cd") val cd: Int
         )
     }
 }
