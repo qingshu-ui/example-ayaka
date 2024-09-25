@@ -27,12 +27,11 @@ jobs:
     - name: Set executable permissions for gradlew
       run: chmod +x ./gradlew
 
-    - name: Configure GitHub Packages
-      run: |
-        echo "//maven.pkg.github.com/qingshu-ui/:_authToken=${{ secrets.GH_TOKEN }}" > ~/.m2/repository.config
-
     - name: Build with Gradle Wrapper
       run: ./gradlew build
+      env:
+        GITHUB_ACTOR: ${{secrets.MY_GITHUB_ACTOR}}
+        GITHUB_TOKEN: ${{secrets.MY_GITHUB_TOKEN}}
 
     - name: SCP Files
       run: |
