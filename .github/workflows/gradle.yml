@@ -60,7 +60,7 @@ jobs:
       - name: SCP Files
         run: |
           scp -P ${{ secrets.SSH_PORT }} \
-          artifact/example-ayaka-artifact \
+          artifact/* \
           ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_WORK_PATH }}
 
       - name: Restart project
@@ -70,6 +70,7 @@ jobs:
           && cd .. && ./restart.sh"
 
       - name: Cleanup SSH key
+        if: always()
         run: |
           rm -f ~/.ssh/id_rsa
           rm -f ~/.ssh/config
