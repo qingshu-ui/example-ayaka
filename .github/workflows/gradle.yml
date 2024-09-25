@@ -27,31 +27,16 @@ jobs:
     - name: Build with Gradle Wrapper
       run: ./gradlew build
 
-  dependency-submission:
-
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up JDK 17
-      uses: actions/setup-java@v4
-      with:
-        java-version: '17'
-        distribution: 'temurin'
-
-    - name: Generate and submit dependency graph
-      uses: gradle/actions/dependency-submission@af1da67850ed9a4cedd57bfd976089dd991e2582 # v4.0.0
-
     - name: SCP Files
       run: |
         scp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} \
         build/libs/example-ayaka-*.*.*.jar \
         ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/root/qqBot/ayaka-server/
+
     - name: Restart remote service
       run: |
         ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} \
         ${{ secrets.USERNAME }}@${{ secrets.HOST }} "cd /root/qqBot/ayaka-server && screen -S client -X quit && screen -dmS client ./run.sh"
-        
+
+            
           
