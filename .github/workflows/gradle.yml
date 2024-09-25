@@ -55,11 +55,12 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: example-ayaka-artifact
+          path: artifact
 
       - name: SCP Files
         run: |
           scp -P ${{ secrets.SSH_PORT }} \
-          example-ayaka-artifact \
+          artifact/example-ayaka-artifact \
           ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_WORK_PATH }}
 
       - name: Restart project
