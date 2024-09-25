@@ -59,7 +59,7 @@ jobs:
 
       - name: SCP Files
         run: |
-          tar -czvf artifact.tar.gz artifact/*
+          tar -czvf artifact.tar.gz -C artifact .
           scp -P ${{ secrets.SSH_PORT }} \
           artifact.tar.gz \
           ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_WORK_PATH }}
