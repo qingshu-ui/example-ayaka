@@ -32,11 +32,11 @@ jobs:
 
       - name: SCP Files
         run: |
-          scp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} \
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} \
           build/libs/example-ayaka-*.*.*.jar \
           ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/root/qqBot/ayaka-server/
 
       - name: Restart remote service
         run: |
-          ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} \
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} \
           ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd /root/qqBot/ayaka-server && screen -S client -X quit && screen -dmS client ./run.sh"
