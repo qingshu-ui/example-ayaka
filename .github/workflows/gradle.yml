@@ -30,13 +30,20 @@ jobs:
           GITHUB_ACTOR: ${{secrets.MY_GITHUB_ACTOR}}
           GITHUB_TOKEN: ${{secrets.MY_GITHUB_TOKEN}}
 
+      - name: Configure SSH before uploading the file
+        run: |
+          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} \
+          ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "screen -S client -X quit && \
+          cd ${{ secrets.SSH_WORK_PATH }} && for file in *.jar; do mv \"$file\" \"$file.bak\"; done"
+
       - name: SCP Files
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} \
-          build/libs/example-ayaka-*.*.*.jar \
-          ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:/root/qqBot/ayaka-server/
+          build/libs/example-ayaka-*.*.*-SNAPSHOT.jar \
+          ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_WORK_PATH }}
 
-      - name: Restart remote service
+      - name: Start project
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} \
-          ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd /root/qqBot/ayaka-server && screen -S client -X quit && screen -dmS client ./run.sh"
+          ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORK_PATH }} \
+          && screen -dmS client ./run.sh"
