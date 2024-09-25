@@ -19,7 +19,6 @@ class QwenChatController @Autowired constructor(
 ) {
 
     @RequestMapping("/api/chat")
-    fun chat(@RequestParam("id") userId: Long, @RequestParam("msg") message: String): String {
-        return qwenService.chat(userId, message)
-    }
+    fun chat(@RequestParam("id") userId: Long, @RequestParam("msg") message: String): String =
+        qwenService.chat(userId, message)
 }

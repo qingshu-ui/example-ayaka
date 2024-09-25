@@ -11,7 +11,7 @@ import io.github.qingshu.ayaka.example.entity.DouYinVideoEntity
  */
 interface DouYinVideoService {
 
-    fun getRandomUnusedVideo(count: Int): List<DouYinVideoEntity>
+    fun getRandomUnusedVideo(count: Int, tag: String = ""): List<DouYinVideoEntity>
 
     fun markVideosAsUsed(entities: List<DouYinVideoEntity>)
 
@@ -22,4 +22,6 @@ interface DouYinVideoService {
     fun requiredUpdateInfo(count: Int): List<DouYinVideoEntity>
 
     fun allUnUpdatedCount(): Int
+
+    fun findAllTags(): List<String>
 }

@@ -24,13 +24,27 @@ interface DouYinVideoRepository : JpaRepository<DouYinVideoEntity, Int> {
         value = "select * from video_info where used_today=false order by random() limit :count",
         nativeQuery = true
     )
-    fun findRandomUnusedVideo(@Param("count") count: Int): List<DouYinVideoEntity>
+    fun findRandomUnusedVideoWithoutTag(@Param("count") count: Int): List<DouYinVideoEntity>
+
+    @Query(
+        value = "select * from video_info " +
+                "where used_today=false " +
+                "and tags like concat('%', :tag, '%') " +
+                "order by random() limit :count",
+        nativeQuery = true
+    )
+    fun findRandomUnusedVideo(@Param("count") count: Int, @Param("tag") tag: String): List<DouYinVideoEntity>
 
     fun findByUsedTodayIsTrue(): List<DouYinVideoEntity>
 
     fun findByTagsAndDescription(tags: String = "", descriptions: String = "", pageable: Pageable): List<DouYinVideoEntity>
 
     fun countByTagsAndDescription(tags: String = "", descriptions: String = ""): Int
+
+    @Query(
+        value = "select d.tags from DouYinVideoEntity d where d.tags!=''"
+    )
+    fun findAllTags(): List<String>
 
     @Transactional
     override fun <S : DouYinVideoEntity> save(entity: S): S {

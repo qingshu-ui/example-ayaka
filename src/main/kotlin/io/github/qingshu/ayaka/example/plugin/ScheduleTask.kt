@@ -1,7 +1,6 @@
 package io.github.qingshu.ayaka.example.plugin
 
 import io.github.qingshu.ayaka.annotation.MessageHandlerFilter
-import io.github.qingshu.ayaka.bot.BotContainer
 import io.github.qingshu.ayaka.bot.BotFactory
 import io.github.qingshu.ayaka.bot.BotSessionFactory
 import io.github.qingshu.ayaka.dto.event.message.GroupMessageEvent
@@ -12,7 +11,6 @@ import io.github.qingshu.ayaka.example.config.EAConfig
 import io.github.qingshu.ayaka.plugin.BotPlugin
 import io.github.qingshu.ayaka.utils.MsgUtils
 import meteordevelopment.orbit.EventHandler
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
