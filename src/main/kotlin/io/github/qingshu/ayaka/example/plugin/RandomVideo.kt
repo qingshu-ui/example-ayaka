@@ -80,7 +80,7 @@ class RandomVideo(
         extractVideoInfoFromDirectory(config.path)
     }
 
-    @Scheduled(cron = "0 0/10 * * * ?")
+    @Scheduled(cron = "0 0/20 * * * ?")
     fun updateVideoInfo() {
         log.info("开始更新视频信息")
         val baseConfig = EAConfig.base
