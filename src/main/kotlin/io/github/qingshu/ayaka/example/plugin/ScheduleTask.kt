@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component
  * This project is licensed under the AGPL-3.0 License.
  * See the LICENSE file for details.
  */
-//@Slf4j
+@Slf4j
 @Component
 class ScheduleTask(
     private val sessionFactory: BotSessionFactory,

@@ -33,7 +33,7 @@ import kotlin.random.Random
  *
  * This file is licensed under the same APGL-3.0 License.
  */
-//@Slf4j
+@Slf4j
 @Component
 class DriftBottle(
     private val repository: DriftBottleRepository,

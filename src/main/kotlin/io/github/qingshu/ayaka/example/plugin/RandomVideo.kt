@@ -46,7 +46,7 @@ import kotlin.random.Random
  * This project is licensed under the GPL-3.0 License.
  * See the LICENSE file for details.
  */
-//@Slf4j
+@Slf4j
 @Component
 class RandomVideo(
     private val service: DouYinVideoService,
