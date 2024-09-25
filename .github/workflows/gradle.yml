@@ -30,20 +30,35 @@ jobs:
           GITHUB_ACTOR: ${{secrets.MY_GITHUB_ACTOR}}
           GITHUB_TOKEN: ${{secrets.MY_GITHUB_TOKEN}}
 
-      - name: Configure SSH before uploading the file
-        run: |
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} \
-          ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORK_PATH }} \
-          && ./stop.sh && ./bak.sh"
+      - name: Upload JAR artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: example-ayaka-artifact
+          path: build/libs/example-ayaka-*.*.*-SNAPSHOT.jar
+
+  download:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+
+      - name: Download JAR artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: example-ayaka-artifact
 
       - name: SCP Files
-        run: |
-          sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -o StrictHostKeyChecking=no -P ${{ secrets.SSH_PORT }} \
-          build/libs/example-ayaka-*.*.*-SNAPSHOT.jar \
-          ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_WORK_PATH }}
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          port: ${{ secrets.SSH_PORT }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: example-ayaka-artifact
+          target: ${{secrets.SSH_WORK_PATH}}
 
       - name: Start project
         run: |
           sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no -p ${{ secrets.SSH_PORT }} \
           ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }} "cd ${{ secrets.SSH_WORK_PATH }} \
-          && ./run.sh"
+          && cd .. && ./restart.sh"
