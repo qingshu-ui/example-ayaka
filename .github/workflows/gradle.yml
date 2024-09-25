@@ -61,7 +61,7 @@ jobs:
         run: |
           tar -czvf artifact.tar.gz artifact/*
           scp -P ${{ secrets.SSH_PORT }} \
-          artifact/artifact.tar.gz \
+          artifact.tar.gz \
           ${{ secrets.SSH_USERNAME }}@${{ secrets.SSH_HOST }}:${{ secrets.SSH_WORK_PATH }}
 
       - name: Restart project
