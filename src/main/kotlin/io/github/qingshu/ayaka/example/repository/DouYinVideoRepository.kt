@@ -37,6 +37,10 @@ interface DouYinVideoRepository : JpaRepository<DouYinVideoEntity, Int> {
 
     fun findByUsedTodayIsTrue(): List<DouYinVideoEntity>
 
+    @Query(
+        value = "select v from DouYinVideoEntity v " +
+                "where v.updateStatus = :status order by function('random') "
+    )
     fun findByUpdateStatus(status: String, pageable: Pageable): List<DouYinVideoEntity>
 
     fun countByUpdateStatus(status: String = "pending"): Int

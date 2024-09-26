@@ -74,6 +74,7 @@ class RandomVideo(
 
     @Scheduled(cron = "0 0/15 * * * ?")
     fun updateVideoInfo() {
+        if (service.allUnUpdatedCount() == 0) return
         log.info("开始更新视频信息")
         val baseConfig = EAConfig.base
         val botSession = sessionFactory.createSession("localhost")
