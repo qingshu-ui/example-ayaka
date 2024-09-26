@@ -29,7 +29,7 @@ class BotStatusReport(
     val bot = botFactory.createBot(cfg.selfId, botSession)
 
     @EventListener(ApplicationReadyEvent::class)
-    fun onStarted() {
+    fun onStarted() = kotlin.runCatching {
         val completedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
         val msg = MsgUtils.builder()
             .text("Bot is started on: $completedTime")
@@ -40,7 +40,7 @@ class BotStatusReport(
     }
 
     @PreDestroy
-    fun onDestroy() {
+    fun onDestroy() = kotlin.runCatching {
         val completedTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss"))
         val msg = MsgUtils.builder()
             .text("Bot is closed at: $completedTime")

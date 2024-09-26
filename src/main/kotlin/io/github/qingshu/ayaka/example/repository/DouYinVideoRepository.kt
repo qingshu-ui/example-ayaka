@@ -47,7 +47,5 @@ interface DouYinVideoRepository : JpaRepository<DouYinVideoEntity, Int> {
     fun findAllTags(): List<String>
 
     @Transactional
-    override fun <S : DouYinVideoEntity> save(entity: S): S {
-        TODO("Not yet implemented")
-    }
+    override fun <S : DouYinVideoEntity> save(entity: S): S
 }

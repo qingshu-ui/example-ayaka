@@ -28,7 +28,5 @@ interface DriftBottleRepository: JpaRepository<DriftBottleEntity, Int> {
     fun countAllByOpenIsFalse(): Int
 
     @Transactional
-    override fun <S : DriftBottleEntity> save(entity: S): S{
-        TODO("Not yet implemented")
-    }
+    override fun <S : DriftBottleEntity> save(entity: S): S
 }
