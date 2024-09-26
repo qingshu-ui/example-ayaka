@@ -54,14 +54,6 @@ class RandomVideo(
     private val botFactory: BotFactory,
     private val sessionFactory: BotSessionFactory
 ) : BotPlugin {
-    /**
-     * 这个插件要做些什么？
-     * 1 当收到指定的指令时
-     * 将随机从指定的路径或者压缩包内提取对应数量（应该加以限制）的视频进行发送
-     *
-     * 2 如何做到随机性？
-     * 3 如何存储视频信息？
-     */
 
     private val config = EAConfig.plugins.randomVideo
     private val failedFileNames = Collections.synchronizedList(mutableListOf<String>())
@@ -80,13 +72,13 @@ class RandomVideo(
         extractVideoInfoFromDirectory(config.path)
     }
 
-    @Scheduled(cron = "0 0/20 * * * ?")
+    @Scheduled(cron = "0 0/15 * * * ?")
     fun updateVideoInfo() {
         log.info("开始更新视频信息")
         val baseConfig = EAConfig.base
         val botSession = sessionFactory.createSession("localhost")
         val bot = botFactory.createBot(baseConfig.selfId, botSession)
-        val requiredUpdateVideos = service.requiredUpdateInfo(50)
+        val requiredUpdateVideos = service.requiredUpdateInfo(Random.nextInt(50, 100))
         val startTipsMsg = MsgUtils.builder()
             .text("开始更新视频信息\n\n")
             .text("本次预计更新 ${requiredUpdateVideos.size} 条数据").build()
@@ -94,15 +86,13 @@ class RandomVideo(
             bot.sendPrivateMsg(it, startTipsMsg)
         }
         val finished = requiredUpdateVideos.mapNotNull { video ->
-            val (tags, desc) = getTags(video.fileName)
-            if (tags.isNotEmpty() || desc.isNotEmpty()) {
-                video.apply {
-                    this.tags = tags
-                    this.description = desc
-                }.also { updatedVideo ->
-                    service.updateVideoInfo(updatedVideo)
-                }
-            } else null
+            val result = getTags(video.fileName)
+            video.tags = result["tags"].orEmpty()
+            video.description = result["desc"].orEmpty()
+            video.updateStatus = result["status"]!!
+            video.failureReason = result["reason"].orEmpty()
+            service.updateVideoInfo(video)
+            if (video.updateStatus == "success") video else null
         }
         val endTipsMsg = MsgUtils.builder()
             .text("视频信息更新结束\n\n")
@@ -160,34 +150,40 @@ class RandomVideo(
         }
     }
 
-    private fun getTags(fileName: String): List<String> {
-        return try {
-            val id = fileName.split("_")[0]
-            val url = "http://localhost/api/douyin/web/fetch_one_video?aweme_id=$id"
-            val jsonNode = NetUtils.get(url).use { resp ->
-                mapper.readTree(resp.body?.string().orEmpty()) as ObjectNode
-            }
-
-            val tags = kotlin.runCatching {
-                val videoTag = jsonNode["data"]["aweme_detail"]["video_tag"] as ArrayNode
-                videoTag.mapNotNull { it["tag_name"].asText().takeIf { text -> text.isNotBlank() } }
-                    .joinToString(",")
-            }.onFailure {
-                log.error("$fileName 获取 tags 失败")
-            }.getOrDefault("")
-
-            val desc = kotlin.runCatching {
-                jsonNode["data"]["aweme_detail"]["desc"].asText()
-            }.onFailure {
-                log.error("$fileName 获取 desc 失败")
-            }.getOrDefault("")
-
-            listOf(tags, desc)
-        } catch (e: Exception) {
-            log.error("$fileName ${e.message}")
-            listOf("", "")
+    private fun getTags(fileName: String): Map<String, String> = runCatching<Map<String, String>> {
+        val result = mutableMapOf(
+            "status" to "pending",
+            "tags" to "",
+            "desc" to "",
+            "reason" to "",
+        )
+        val id = fileName.split("_")[0]
+        val url = "http://localhost/api/douyin/web/fetch_one_video?aweme_id=$id"
+        val jsonNode = NetUtils.get(url).use { resp ->
+            mapper.readTree(resp.body?.string().orEmpty()) as ObjectNode
         }
-    }
+        val data = jsonNode["data"]
+        if (data["aweme_detail"].isNull) {
+            result["status"] = "failed"
+            result["reason"] = data["filter_detail"]["detail_msg"].asText().orEmpty()
+            log.warn("${result["status"]}: ${result["reason"]}")
+            return@runCatching result
+        }
+        val videoTag = data["aweme_detail"]["video_tag"] as ArrayNode
+        result["tags"] = videoTag.mapNotNull { it["tag_name"].asText().takeIf { text -> text.isNotBlank() } }
+            .joinToString(",")
+        result["desc"] = data["aweme_detail"]["desc"].asText().orEmpty()
+        result["status"] = "success"
+        result
+    }.getOrDefault(
+        mapOf(
+            "status" to "failed",
+            "reason" to "",
+            "tags" to "",
+            "desc" to "",
+        )
+    )
+
 
     private fun calculateMD5(file: File): String {
         val md = MessageDigest.getInstance("MD5")

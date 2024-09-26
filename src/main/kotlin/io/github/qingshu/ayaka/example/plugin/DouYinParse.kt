@@ -50,10 +50,10 @@ class DouYinParse(
     fun handler(event: AnyMessageEvent) {
         if (!RegexUtils.check(event.message, Regex.DOU_YIN_SHORT_URL)) return
         val bot = event.bot
-        val messageId = event.messageId
+        val userId = event.userId
         bot.sendMsg(
             event = event,
-            msg = MsgUtils.builder().reply(messageId).text("好的，宝贝，请稍等").build(),
+            msg = MsgUtils.builder().at(userId).text("好的，宝贝，请稍等").build(),
         )
         coroutine.launch {
             kotlin.runCatching {
@@ -64,7 +64,7 @@ class DouYinParse(
                 bot.sendMsg(event, msg, false)
             }.onFailure {
                 val msg = MsgUtils.builder()
-                    .reply(messageId)
+                    .at(userId)
                     .text("哦，失败了嘛，不要灰心: ${it.message}")
                     .build()
                 bot.sendMsg(event, msg)

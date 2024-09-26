@@ -62,10 +62,10 @@ class DouYinVideoServiceImpl(
 
     override fun requiredUpdateInfo(count: Int): List<DouYinVideoEntity> {
         val pageable = PageRequest.of(0, count)
-        return repository.findByTagsAndDescription(pageable = pageable)
+        return repository.findByUpdateStatus("pending", pageable = pageable)
     }
 
-    override fun allUnUpdatedCount(): Int = repository.countByTagsAndDescription()
+    override fun allUnUpdatedCount(): Int = repository.countByUpdateStatus()
 
     override fun findAllTags(): List<String> {
         return repository.findAllTags().asSequence()

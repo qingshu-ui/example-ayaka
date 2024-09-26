@@ -55,6 +55,6 @@ class ScheduleTask(
         val botSession = sessionFactory.createSession("localhost")
         val bot = botFactory.createBot(EAConfig.base.selfId, botSession)
         val rel = bot.sendLike(userId)
-        bot.sendPrivateMsg(userId, "点赞：${rel.status}", false)
+        bot.sendPrivateMsg(userId, "点赞：${rel.status}")
     }
 }

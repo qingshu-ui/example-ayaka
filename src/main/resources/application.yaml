@@ -1,14 +1,7 @@
 spring:
   application:
     name: example-ayaka
-  ai:
-    openai:
-      chat:
-        enabled: true
-        api-key: ${SPRING_AI_OPENAI_API_KEY}
-        base-url: https://dashscope.aliyuncs.com/compatible-mode
-        options:
-          model: qwen-max
+
   jpa:
     hibernate:
       ddl-auto: update

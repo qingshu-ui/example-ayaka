@@ -54,9 +54,7 @@ class Roulette : BotPlugin {
 
             msg.text(if (isTimeout) "游戏超时！" else "游戏结束！")
             msg.text("\n参与者：")
-            participants.forEachIndexed { _, id ->
-                msg.at(id)
-            }
+            participants.forEach(msg::at)
             msg.text("\n中弹情况：")
             shotList.forEachIndexed { index, shot ->
                 msg.text("第${index + 1}发：")

@@ -8,7 +8,6 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -36,8 +35,7 @@ jobs:
           name: example-ayaka-artifact
           path: build/libs/example-ayaka-*.*.*-SNAPSHOT.jar
 
-
-  upload:
+  deploy:
     runs-on: ubuntu-latest
     needs: build
 
@@ -76,4 +74,3 @@ jobs:
           rm -f ~/.ssh/id_rsa
           rm -f ~/.ssh/config
           rm -f ~/.ssh/known_hosts
-

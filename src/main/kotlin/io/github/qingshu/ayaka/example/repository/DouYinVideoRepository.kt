@@ -37,9 +37,9 @@ interface DouYinVideoRepository : JpaRepository<DouYinVideoEntity, Int> {
 
     fun findByUsedTodayIsTrue(): List<DouYinVideoEntity>
 
-    fun findByTagsAndDescription(tags: String = "", descriptions: String = "", pageable: Pageable): List<DouYinVideoEntity>
+    fun findByUpdateStatus(status: String, pageable: Pageable): List<DouYinVideoEntity>
 
-    fun countByTagsAndDescription(tags: String = "", descriptions: String = ""): Int
+    fun countByUpdateStatus(status: String = "pending"): Int
 
     @Query(
         value = "select d.tags from DouYinVideoEntity d where d.tags!=''"

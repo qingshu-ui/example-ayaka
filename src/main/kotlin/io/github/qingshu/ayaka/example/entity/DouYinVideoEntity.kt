@@ -25,12 +25,21 @@ data class DouYinVideoEntity(
     @Column(nullable = false)
     val size: Long,
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "longtext")
     var description: String = "",
 
     @Column(nullable = false)
     var tags: String = "",
 
     @Column(nullable = false)
-    var usedToday: Boolean = false
+    var usedToday: Boolean = false,
+
+    /**
+     * pending, success, failed
+     */
+    @Column(nullable = false)
+    var updateStatus: String = "pending",
+
+    @Column(nullable = false)
+    var failureReason: String = "",
 )
