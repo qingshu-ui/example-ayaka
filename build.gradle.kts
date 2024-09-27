@@ -25,21 +25,13 @@ configurations {
 repositories {
     mavenLocal()
     mavenCentral()
-    maven {
-        url = uri("https://maven.pkg.github.com/qingshu-ui/ayaka-spring-boot-starter")
-        credentials {
-            username = System.getenv("GITHUB_ACTOR")
-            password = System.getenv("GITHUB_TOKEN")
-        }
-    }
-    maven { url = uri("https://maven.meteordev.org/releases") }
     maven { url = uri("https://repo.spring.io/milestone") }
     maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation ("io.github.qingshu-ui:ayaka-spring-boot-starter:1.0.1-SNAPSHOT")
+    implementation ("com.github.qingshu-ui:ayaka-spring-boot-starter:1.0.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     // spring
