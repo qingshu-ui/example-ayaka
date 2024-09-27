@@ -55,7 +55,7 @@ class RandomVideo(
     private val sessionFactory: BotSessionFactory
 ) : BotPlugin {
 
-    private val config = EAConfig.plugins.randomVideo
+    private val config get() = EAConfig.plugins.randomVideo
     private val failedFileNames = Collections.synchronizedList(mutableListOf<String>())
     private val expiringMap: ExpiringMap<Long, Long> = ExpiringMap.builder()
         .variableExpiration()

@@ -39,7 +39,7 @@ class DriftBottle(
     private val repository: DriftBottleRepository,
 ) : BotPlugin {
 
-    private val config = EAConfig.plugins.driftBottle
+    private val config get() = EAConfig.plugins.driftBottle
 
     private val expiringMap: ExpiringMap<Long, Long> = ExpiringMap.builder()
         .variableExpiration()

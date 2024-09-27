@@ -24,7 +24,7 @@ class BotStatusReport(
     sessionFactory: BotSessionFactory,
 ) {
 
-    private val cfg = EAConfig.base
+    private val cfg get() = EAConfig.base
     private val botSession = sessionFactory.createSession("localhost")
     private val bot = botFactory.createBot(cfg.selfId, botSession)
 

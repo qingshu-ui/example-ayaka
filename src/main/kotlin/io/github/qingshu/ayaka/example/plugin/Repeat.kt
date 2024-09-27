@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit
 @Component
 class Repeat: BotPlugin {
 
-    private val cfg = EAConfig.plugins.repeat
+    private val cfg get() = EAConfig.plugins.repeat
 
     private val expiringMap: ExpiringMap<Long, String> = ExpiringMap.builder()
         .variableExpiration()
