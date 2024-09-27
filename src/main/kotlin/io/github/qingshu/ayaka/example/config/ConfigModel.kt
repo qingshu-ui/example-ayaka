@@ -31,7 +31,7 @@ data class ConfigModel(
         @JsonProperty("driftBottle") val driftBottle: DriftBottle,
         @JsonProperty("repeat") val repeat: Repeat,
         @JsonProperty("roulette") val roulette: Roulette,
-        @JsonProperty("randomVideo") val randomVideo: RandomVideo
+        @JsonProperty("randomVideo") val randomVideo: RandomVideo,
     ) {
         data class DriftBottle(
             @JsonProperty("cd") val cd: Int,
@@ -49,7 +49,7 @@ data class ConfigModel(
 
         data class RandomVideo(
             @JsonProperty("path") val path: String,
-            @JsonProperty("cd") val cd: Int
+            @JsonProperty("cd") val cd: Int,
         )
     }
 }
