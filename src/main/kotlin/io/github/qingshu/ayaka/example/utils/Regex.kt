@@ -22,4 +22,5 @@ object Regex {
     const val ROULETTE = "^切换轮盘模式\$|^开始轮盘(\\s[1-6])?\$|^开枪\$"
     const val RANDOM_VIDEO = """^(涩涩|ss)(\s*\d+)?(\s*\S+)?$"""
     const val GET_TAGS_CMD = """^(涩涩标签|ss标签|ssbq|标签|biaoq|bqian)$"""
+    const val BAN_CMD = "^(禁言|jiny|jyan|jy)(.*)?(\\d+)?$"
 }
