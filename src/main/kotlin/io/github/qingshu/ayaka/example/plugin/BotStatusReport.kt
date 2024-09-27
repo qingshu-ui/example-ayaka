@@ -20,13 +20,13 @@ import java.time.format.DateTimeFormatter
  */
 @Component
 class BotStatusReport(
-    private val botFactory: BotFactory,
-    private val sessionFactory: BotSessionFactory,
+    botFactory: BotFactory,
+    sessionFactory: BotSessionFactory,
 ) {
 
     private val cfg = EAConfig.base
-    val botSession = sessionFactory.createSession("localhost")
-    val bot = botFactory.createBot(cfg.selfId, botSession)
+    private val botSession = sessionFactory.createSession("localhost")
+    private val bot = botFactory.createBot(cfg.selfId, botSession)
 
     @EventListener(ApplicationReadyEvent::class)
     fun onStarted() = kotlin.runCatching {
