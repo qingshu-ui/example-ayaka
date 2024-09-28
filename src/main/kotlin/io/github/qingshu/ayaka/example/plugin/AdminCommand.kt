@@ -61,12 +61,10 @@ class AdminCommand(
     @EventHandler
     @MessageHandlerFilter(cmd = "退群", at = AtEnum.NEED)
     fun groupQuitCmd(event: GroupMessageEvent) {
-        val cmd = event.rawMessage
-        executeCommand(cmd, event) {
-            val bot = event.bot
+        executeCommand(event.rawMessage, event) {
             val msg = MsgUtils.builder().reply(event.messageId).text("收到").build()
-            bot.sendGroupMsg(event.groupId, msg)
-            val echo = bot.setGroupLeave(event.groupId, false)
+            event.bot.sendGroupMsg(event.groupId, msg)
+            val echo = event.bot.setGroupLeave(event.groupId, false)
             log.info("Executed cmd: {}", echo)
         }
     }
@@ -76,49 +74,47 @@ class AdminCommand(
     fun groupBanCmd(event: GroupMessageEvent) {
         val cmd = "禁言"
         val bot = event.bot
-        val groupId = event.groupId
-        val arrayMsg = event.arrayMsg
-        val userList = getAtList(arrayMsg).distinct()
-        val emptyUserMsg = MsgUtils.builder().reply(event.messageId)
-            .text("你搁那禁言空气呢").build()
+        val userList = getAtList(event.arrayMsg).distinct()
+
         if (userList.isEmpty()) {
-            bot.sendGroupMsg(groupId, emptyUserMsg)
+            event.bot.sendGroupMsg(
+                event.groupId, MsgUtils.builder().reply(event.messageId).text("你搁那禁言空气呢").build()
+            )
             return
         }
-        executeCommand(cmd, event, ::groupBanHandler)
-    }
 
-    fun groupBanHandler(event: MessageEvent) {
-        if (event !is GroupMessageEvent) return
-        val userList = getAtList(event.arrayMsg).distinct()
-        val bot = event.bot
-        val groupId = event.groupId
-        val matcher = event.matcher!!
-        val duration = matcher.group(3)?.trim()?.toIntOrNull()?.coerceIn(1, 86400) ?: 60
-        val banSelfMsg = MsgUtils.builder()
-            .reply(event.messageId)
-            .text("什么？你还要禁言我？你良心去哪了！！")
-            .build()
-        val finish = userList.mapNotNull { userId ->
-            if (userId == bot.selfId) {
-                bot.sendGroupMsg(groupId, banSelfMsg)
-                return@mapNotNull null
+        executeCommand(cmd, event) {
+            val matcher = event.matcher!!
+            val duration = (matcher.group(3)?.trim()?.toIntOrNull()?.coerceIn(1, 24) ?: 1).m
+            val banSelfMsg = MsgUtils.builder()
+                .reply(event.messageId)
+                .text("什么？你还要禁言我？你良心去哪了！！")
+                .build()
+            val finish = userList.mapNotNull { userId ->
+                if (userId == bot.selfId) {
+                    bot.sendGroupMsg(event.groupId, banSelfMsg)
+                    return@mapNotNull null
+                }
+                val echo = bot.setGroupBan(event.groupId, userId, duration)
+                log.info("{}", echo)
+                if (echo.status != "ok") return@mapNotNull null
+                userId
             }
-            val echo = bot.setGroupBan(groupId, userId, duration)
-            log.info("{}", echo)
-            if (echo.status != "ok") return@mapNotNull null
-            userId
+            if (finish.isEmpty()) return@executeCommand
+            val msg = MsgUtils.builder()
+                .reply(event.messageId)
+                .text("完成辽\n")
+                .text("有以下倒霉蛋被禁言了\n\n")
+            finish.forEachIndexed { idx, userId ->
+                msg.at(userId = userId)
+                if (idx != finish.size - 1) msg.text("\n")
+            }
+            bot.sendGroupMsg(event.groupId, msg.build())
         }
-        if (finish.isEmpty()) return
-        val msg = MsgUtils.builder()
-            .reply(event.messageId)
-            .text("完成辽\n")
-            .text("有以下倒霉蛋被禁言了\n\n")
-        finish.forEachIndexed { idx, userId ->
-            msg.at(userId = userId)
-            if (idx != finish.size - 1) msg.text("\n")
-        }
-        bot.sendGroupMsg(groupId, msg.build())
     }
 
+    private val Int.s: Int get() = this
+    private val Int.m: Int get() = this * 60
+    private val Int.h: Int get() = this * 60 * 60
+    private val Int.d: Int get() = this * 60 * 60 * 24
 }
