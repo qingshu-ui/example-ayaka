@@ -6,7 +6,7 @@ import jakarta.persistence.*
  * Copyright (c) 2024 qingshu.
  * This file is part of the example-ayaka project.
  *
- * This project is licensed under the GPL-3.0 License.
+ * This project is licensed under the AGPL-3.0 License.
  * See the LICENSE file for details.
  */
 @Entity
@@ -42,4 +42,8 @@ data class DouYinVideoEntity(
 
     @Column(nullable = false)
     var failureReason: String = "",
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "author_id", nullable = true, referencedColumnName = "id")
+    var author: DouYinAuthorEntity? = null,
 )

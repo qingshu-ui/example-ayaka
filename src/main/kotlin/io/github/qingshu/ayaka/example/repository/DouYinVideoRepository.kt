@@ -1,5 +1,6 @@
 package io.github.qingshu.ayaka.example.repository
 
+import io.github.qingshu.ayaka.example.entity.DouYinAuthorEntity
 import io.github.qingshu.ayaka.example.entity.DouYinVideoEntity
 import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
@@ -44,6 +45,10 @@ interface DouYinVideoRepository : JpaRepository<DouYinVideoEntity, Int> {
     fun findByUpdateStatus(status: String, pageable: Pageable): List<DouYinVideoEntity>
 
     fun countByUpdateStatus(status: String = "pending"): Int
+
+    fun findByUpdateStatusAndAuthor(status: String = "success", author: DouYinAuthorEntity? = null, pageable: Pageable): List<DouYinVideoEntity>
+
+    fun countByUpdateStatusAndAuthor(status: String = "success", author: DouYinAuthorEntity? = null): Int
 
     @Query(
         value = "select d.tags from DouYinVideoEntity d where d.tags!=''"

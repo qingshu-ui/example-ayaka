@@ -24,4 +24,8 @@ interface DouYinVideoService {
     fun allUnUpdatedCount(): Int
 
     fun findAllTags(): List<String>
+
+    fun requiredUpdateAuthorCount(): Int
+
+    fun requiredUpdateAuthor(count: Int): List<DouYinVideoEntity>
 }

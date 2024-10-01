@@ -1,10 +1,6 @@
 package io.github.qingshu.ayaka.example.plugin
 
-import com.fasterxml.jackson.databind.node.ArrayNode
-import com.fasterxml.jackson.databind.node.ObjectNode
 import io.github.qingshu.ayaka.annotation.MessageHandlerFilter
-import io.github.qingshu.ayaka.bot.BotFactory
-import io.github.qingshu.ayaka.bot.BotSessionFactory
 import io.github.qingshu.ayaka.dto.constant.AtEnum
 import io.github.qingshu.ayaka.dto.event.message.AnyMessageEvent
 import io.github.qingshu.ayaka.example.annotation.Slf4j
@@ -16,18 +12,15 @@ import io.github.qingshu.ayaka.example.plugin.RandomMessages.emptyResultMessageW
 import io.github.qingshu.ayaka.example.plugin.RandomMessages.rateLimitMessages
 import io.github.qingshu.ayaka.example.plugin.RandomMessages.waitMessage
 import io.github.qingshu.ayaka.example.service.DouYinVideoService
-import io.github.qingshu.ayaka.example.utils.NetUtils
 import io.github.qingshu.ayaka.example.utils.Regex
 import io.github.qingshu.ayaka.plugin.BotPlugin
 import io.github.qingshu.ayaka.utils.MsgUtils
 import io.github.qingshu.ayaka.utils.generateForwardMsg
-import io.github.qingshu.ayaka.utils.mapper
 import jakarta.annotation.PostConstruct
 import kotlinx.coroutines.*
 import meteordevelopment.orbit.EventHandler
 import net.jodah.expiringmap.ExpirationPolicy
 import net.jodah.expiringmap.ExpiringMap
-import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 import java.io.File
 import java.io.FileWriter
@@ -51,8 +44,6 @@ import kotlin.random.Random
 class RandomVideo(
     private val service: DouYinVideoService,
     private val coroutineScope: CoroutineScope,
-    private val botFactory: BotFactory,
-    private val sessionFactory: BotSessionFactory
 ) : BotPlugin {
 
     private val config get() = EAConfig.plugins.randomVideo
@@ -70,39 +61,6 @@ class RandomVideo(
     fun initData() {
         if (0L != service.count()) return
         extractVideoInfoFromDirectory(config.path)
-    }
-
-    @Scheduled(cron = "0 0/15 * * * ?")
-    fun updateVideoInfo() {
-        if (service.allUnUpdatedCount() == 0) return
-        log.info("开始更新视频信息")
-        val baseConfig = EAConfig.base
-        val botSession = sessionFactory.createSession("localhost")
-        val bot = botFactory.createBot(baseConfig.selfId, botSession)
-        val requiredUpdateVideos = service.requiredUpdateInfo(Random.nextInt(50, 100))
-        val startTipsMsg = MsgUtils.builder()
-            .text("开始更新视频信息\n\n")
-            .text("本次预计更新 ${requiredUpdateVideos.size} 条数据").build()
-        baseConfig.adminList.forEach {
-            bot.sendPrivateMsg(it, startTipsMsg)
-        }
-        val finished = requiredUpdateVideos.mapNotNull { video ->
-            val result = getTags(video.fileName)
-            video.tags = result["tags"].orEmpty()
-            video.description = result["desc"].orEmpty()
-            video.updateStatus = result["status"]!!
-            video.failureReason = result["reason"].orEmpty()
-            service.updateVideoInfo(video)
-            if (video.updateStatus == "success") video else null
-        }
-        val endTipsMsg = MsgUtils.builder()
-            .text("视频信息更新结束\n\n")
-            .text("本次成功更新 ${finished.count()} 条数据\n")
-            .text("剩余 ${service.allUnUpdatedCount()} 需要更新").build()
-        baseConfig.adminList.forEach {
-            bot.sendPrivateMsg(it, endTipsMsg)
-        }
-        log.info("视频信息更新结束")
     }
 
     private fun extractVideoInfoFromDirectory(path: String) {
@@ -150,41 +108,6 @@ class RandomVideo(
             jobs.forEach { it.join() }
         }
     }
-
-    private fun getTags(fileName: String): Map<String, String> = runCatching<Map<String, String>> {
-        val result = mutableMapOf(
-            "status" to "pending",
-            "tags" to "",
-            "desc" to "",
-            "reason" to "",
-        )
-        val id = fileName.split("_")[0]
-        val url = "http://localhost/api/douyin/web/fetch_one_video?aweme_id=$id"
-        val jsonNode = NetUtils.get(url).use { resp ->
-            mapper.readTree(resp.body?.string().orEmpty()) as ObjectNode
-        }
-        val data = jsonNode["data"]
-        if (data["aweme_detail"].isNull) {
-            result["status"] = "failed"
-            result["reason"] = data["filter_detail"]["detail_msg"].asText().orEmpty()
-            log.warn("${result["status"]}: ${result["reason"]}")
-            return@runCatching result
-        }
-        val videoTag = data["aweme_detail"]["video_tag"] as ArrayNode
-        result["tags"] = videoTag.mapNotNull { it["tag_name"].asText().takeIf { text -> text.isNotBlank() } }
-            .joinToString(",")
-        result["desc"] = data["aweme_detail"]["desc"].asText().orEmpty()
-        result["status"] = "success"
-        result
-    }.getOrDefault(
-        mapOf(
-            "status" to "failed",
-            "reason" to "",
-            "tags" to "",
-            "desc" to "",
-        )
-    )
-
 
     private fun calculateMD5(file: File): String {
         val md = MessageDigest.getInstance("MD5")
