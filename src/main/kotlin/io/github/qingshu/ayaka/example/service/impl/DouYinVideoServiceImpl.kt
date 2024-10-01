@@ -148,7 +148,7 @@ class DouYinVideoServiceImpl(
         val endTipsMsg = MsgUtils.builder()
             .text("视频 author 信息更新结束\n\n")
             .text("本次成功更新 ${finished.count()} 条数据\n")
-            .text("剩余 ${allUnUpdatedCount()} 需要更新").build()
+            .text("剩余 ${requiredUpdateAuthorCount()} 需要更新").build()
         EAConfig.base.adminList.forEach {
             bot.sendPrivateMsg(it, endTipsMsg)
         }
