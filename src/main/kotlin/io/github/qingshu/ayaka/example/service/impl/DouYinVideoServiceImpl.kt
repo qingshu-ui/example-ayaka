@@ -139,6 +139,9 @@ class DouYinVideoServiceImpl(
                 video.author = author
                 updateVideoInfo(video)
                 return@mapNotNull video
+            }else{
+                video.updateStatus = "failed"
+                updateVideoInfo(video)
             }
             null
         }
