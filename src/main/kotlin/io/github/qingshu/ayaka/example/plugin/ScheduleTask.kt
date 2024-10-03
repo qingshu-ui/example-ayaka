@@ -68,7 +68,7 @@ class ScheduleTask(
         bot.sendPrivateMsg(userId, "点赞：${rel.status}")
     }
 
-    @Scheduled(cron = "0 0/15 * * * ?")
+    @Scheduled(cron = "0 37 * * * ?")
     // @EventHandler
     // @MessageHandlerFilter(cmd = "test")
     fun firstPullPost(/*e: PrivateMessageEvent*/) {
