@@ -20,15 +20,12 @@ data class DouYinPostEntity(
     val videoId: String,
 
     @Column(nullable = false)
-    val tags: String = "",
+    var tags: String = "",
 
     @Column(nullable = false)
-    val isDeleted: Boolean = false,
-
-    @Column(nullable = false)
-    val size: Long = 0,
+    var isDeleted: Boolean = false,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", referencedColumnName = "id", nullable = true)
-    val author: DouYinAuthorEntity? = null,
+    var author: DouYinAuthorEntity? = null,
 )

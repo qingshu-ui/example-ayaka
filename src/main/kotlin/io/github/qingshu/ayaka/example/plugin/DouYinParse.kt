@@ -5,6 +5,7 @@ import io.github.qingshu.ayaka.dto.constant.AtEnum
 import io.github.qingshu.ayaka.dto.event.message.AnyMessageEvent
 import io.github.qingshu.ayaka.example.annotation.Slf4j
 import io.github.qingshu.ayaka.example.dto.DouYinParseDTO
+import io.github.qingshu.ayaka.example.service.DouYinPostService
 import io.github.qingshu.ayaka.example.utils.NetUtils
 import io.github.qingshu.ayaka.example.utils.Regex
 import io.github.qingshu.ayaka.example.utils.RegexUtils
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Component
 @Component
 class DouYinParse(
     private val coroutine: CoroutineScope,
+    private val douService: DouYinPostService
 ) : BotPlugin {
 
     private fun request(msg: String) = runCatching<DouYinParseDTO.Detail> {
@@ -37,11 +39,8 @@ class DouYinParse(
             if (id.isBlank()) throw Exception("DouYin ID cannot be blank")
             id
         }
-
-        return NetUtils.get("http://117.72.12.207/api/douyin/web/fetch_one_video?aweme_id=$videoId").use { resp ->
-            val jsonStr = resp.body?.string().orEmpty()
-            val data = mapper.readTree(jsonStr)
-            mapper.treeToValue(data["data"], DouYinParseDTO::class.java)
+        return douService.fetchOneVideo(videoId).let {
+            mapper.treeToValue(it["data"], DouYinParseDTO::class.java)
         }.detail
     }.getOrThrow()
 
