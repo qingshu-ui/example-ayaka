@@ -157,10 +157,10 @@ class RandomVideo(
                 val randomMessage =
                     rateLimitMessages[Random.nextInt(rateLimitMessages.size)]
                 bot.sendMsg(
-                    e, MsgUtils.builder()
-                        .reply(e.messageId)
-                        .text(randomMessage.replace("{}", "$expectedExpiration"))
-                        .build()
+                    e, MsgUtils.build {
+                        reply(e.messageId)
+                        text(randomMessage.replace("{}", "$expectedExpiration"))
+                    }
                 )
                 return
             }
@@ -207,12 +207,12 @@ class RandomVideo(
         expiringGetTagMap.put(expiringId, e.userId, 2 * 60, TimeUnit.SECONDS)
 
         val allTags = service.findAllTags()
-        val messageBuilder = MsgUtils.builder()
-            .reply(e.messageId)
-            .text("官爷，这是咱这最好的了，请过目：\n")
-            .build()
+        val messageBuilder = MsgUtils.build {
+            reply(e.messageId)
+            text("官爷，这是咱这最好的了，请过目：\n")
+        }
         val allTagsMsg = listOf(messageBuilder) + allTags.map {
-            MsgUtils.builder().text("$it\n").build()
+            MsgUtils.build { text("$it\n") }
         }
         val forwardMsg = generateForwardMsg(123, "bot", allTagsMsg)
         bot.sendForwardMsg(e, forwardMsg)

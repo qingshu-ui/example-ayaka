@@ -69,8 +69,8 @@ class Roulette : BotPlugin {
     }
 
     enum class RouletteType(val operateName: String, val introduction: String) {
-        NUTE("禁言", "禁言"),
-        KIKC("踢人", "踢出")
+        MUTE("禁言", "禁言"),
+        KICK("踢人", "踢出")
     }
 
     private val expiringMap: ExpiringMap<Long, GroupRouletteData> = ExpiringMap.builder()
@@ -83,7 +83,7 @@ class Roulette : BotPlugin {
         SendUtils.group(v.groupId, v.bot, v.getSummary(true))
     }
 
-    private var rouletteType: RouletteType = RouletteType.NUTE
+    private var rouletteType: RouletteType = RouletteType.MUTE
 
     private val defaultQuotations = listOf(
         "看来幸运女神眷顾你，这次安全了。",
@@ -99,7 +99,7 @@ class Roulette : BotPlugin {
 
     private fun changeMode(groupId: Long, userId: Long, userRole: String, bot: Bot) {
         if ((level[userRole] ?: 0) > 1) {
-            rouletteType = if (rouletteType == RouletteType.NUTE) RouletteType.KIKC else RouletteType.NUTE
+            rouletteType = if (rouletteType == RouletteType.MUTE) RouletteType.KICK else RouletteType.MUTE
             bot.sendGroupMsg(groupId, "轮盘已切换至${rouletteType.operateName}模式")
             return
         }
@@ -163,7 +163,7 @@ class Roulette : BotPlugin {
 
         if (botRoleLevel > userRoleLevel) {
             when (rouletteType) {
-                RouletteType.NUTE -> {
+                RouletteType.MUTE -> {
                     bot.setGroupBan(
                         data.groupId,
                         userId,
@@ -171,7 +171,7 @@ class Roulette : BotPlugin {
                     )
                 }
 
-                RouletteType.KIKC -> bot.setGroupKick(data.groupId, userId)
+                RouletteType.KICK -> bot.setGroupKick(data.groupId, userId)
             }
             data.progress++
             data.hitCount++

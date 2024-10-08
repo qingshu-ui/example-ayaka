@@ -64,11 +64,11 @@ class DriftBottle(
                 val res = repository.save(DriftBottleEntity(0, groupId, groupName, userId, userName, content))
                 bot.sendGroupMsg(
                     groupId,
-                    MsgUtils.builder()
-                        .at(userId)
-                        .text("你将一个编号为 ${res.id} 写着如下内容的纸条塞入瓶中扔进大海，希望有人能够捞到～")
-                        .text("\n\n${content}")
-                        .build(),
+                    MsgUtils.build {
+                        at(userId)
+                        text("你将一个编号为 ${res.id} 写着如下内容的纸条塞入瓶中扔进大海，希望有人能够捞到～")
+                        text("\n\n${content}")
+                    }
                 )
                 return@with
             }
@@ -93,22 +93,22 @@ class DriftBottle(
                 repository.save(bottle)
                 bot.sendGroupMsg(
                     bottle.groupId,
-                    MsgUtils.builder()
-                        .at(bottle.userId)
-                        .text("\n你编号为 ${bottle.id} 的漂流瓶被人捞起来啦~")
-                        .text("\n\n群：${groupName}")
-                        .text("\n用户：${userName}")
-                        .build(),
+                    MsgUtils.build {
+                        at(bottle.userId)
+                        text("\n你编号为 ${bottle.id} 的漂流瓶被人捞起来啦~")
+                        text("\n\n群：${groupName}")
+                        text("\n用户：${userName}")
+                    }
                 )
                 bot.sendGroupMsg(
                     groupId,
-                    MsgUtils.builder()
-                        .at(userId)
-                        .text("\n你在海边捡到了一个透明的玻璃瓶，你打开了瓶子，里面写着：\n\n")
-                        .text(bottle.content)
-                        .text("\n\n群：${bottle.groupName}")
-                        .text("\n用户：${bottle.userName}")
-                        .build(),
+                    MsgUtils.build {
+                        at(userId)
+                        text("\n你在海边捡到了一个透明的玻璃瓶，你打开了瓶子，里面写着：\n\n")
+                        text(bottle.content)
+                        text("\n\n群：${bottle.groupName}")
+                        text("\n用户：${bottle.userName}")
+                    }
                 )
                 return@with
             }
@@ -117,14 +117,14 @@ class DriftBottle(
                 val count = repository.countAllByOpenIsFalse()
                 bot.sendGroupMsg(
                     groupId,
-                    MsgUtils.builder()
-                        .at(userId)
-                        .text("\n你缓缓走入大海，感受着海浪轻柔地拍打着你的小腿，膝盖……\n")
-                        .text("波浪卷着你的腰腹，你感觉有些把握不住平衡了……\n")
-                        .text("……\n")
-                        .text("你沉入海中，【${count}】个物体与你一同沉浮。\n")
-                        .text("不知何处涌来一股暗流，你失去了意识。")
-                        .build(),
+                    MsgUtils.build {
+                        at(userId)
+                        text("\n你缓缓走入大海，感受着海浪轻柔地拍打着你的小腿，膝盖……\n")
+                        text("波浪卷着你的腰腹，你感觉有些把握不住平衡了……\n")
+                        text("……\n")
+                        text("你沉入海中，【${count}】个物体与你一同沉浮。\n")
+                        text("不知何处涌来一股暗流，你失去了意识。")
+                    }
                 )
                 return@with
             }
@@ -135,15 +135,15 @@ class DriftBottle(
                 if (!queryBottle.isPresent) throw EAException("未查询到编号为 $id 的漂流瓶")
                 bot.sendGroupMsg(
                     groupId,
-                    MsgUtils.builder()
-                        .at(userId)
-                        .text("\n${queryBottle.get().content}")
-                        .text("\n\n状态：${if (queryBottle.get().open) "被捞起" else "未被捞起"}")
-                        .text("\n所属用户：${queryBottle.get().userName}")
-                        .text("\n所属群组：${queryBottle.get().groupName}")
-                        .text("\n捞起用户：${queryBottle.get().openUserName}")
-                        .text("\n捞起群组：${queryBottle.get().openGroupName}")
-                        .build(),
+                    MsgUtils.build {
+                        at(userId)
+                        text("\n${queryBottle.get().content}")
+                        text("\n\n状态：${if (queryBottle.get().open) "被捞起" else "未被捞起"}")
+                        text("\n所属用户：${queryBottle.get().userName}")
+                        text("\n所属群组：${queryBottle.get().groupName}")
+                        text("\n捞起用户：${queryBottle.get().openUserName}")
+                        text("\n捞起群组：${queryBottle.get().openGroupName}")
+                    }
                 )
             }
         }

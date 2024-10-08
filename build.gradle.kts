@@ -31,13 +31,14 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    implementation ("com.github.qingshu-ui:ayaka-spring-boot-starter:1.0.1")
+    implementation ("com.github.qingshu-ui:ayaka-spring-boot-starter:1.1.0")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     // spring
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation ("org.springframework.boot:spring-boot-starter-aop")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
+    implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
     implementation("org.xerial:sqlite-jdbc:3.45.2.0")
